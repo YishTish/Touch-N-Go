@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SEP_Patrol</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="YourName">Your Name</string>
+    <string name="CurrentLocation">Current Location</string>
+    <string name="Comments">Comments</string>
+    <string name="CheckIN">Check In</string>
+    <string name="ScreenDescription">Please type in your name and location. If you have any comments, please add those as well. When done, press the Check-in button</string>
+
+</resources>
