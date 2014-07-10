@@ -8,5 +8,10 @@
     <string name="Comments">Comments</string>
     <string name="CheckIN">Check In</string>
     <string name="ScreenDescription">Please type in your name and location. If you have any comments, please add those as well. When done, press the Check-in button</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="firstName">First Name</string>
+    <string name="LastName">Last (Sir) Name</string>
+    <string name="email">Email</string>
+    <string name="Register">Register</string>
 
 </resources>

@@ -3,13 +3,20 @@ package com.yishai.sep_patrol;
 
 
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -35,6 +42,13 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		JSONObject userData = getUserRegistration();
+		if(userData==null){
+			Intent registrationIntent = new Intent(this, RegisterActivity.class);
+			startActivity(registrationIntent);
+		}
+		
 		setContentView(R.layout.activity_main);	
 		
 		nameTV = (TextView)findViewById(R.id.NameTB);
@@ -163,7 +177,38 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	}
 
 	
-	
+	private JSONObject getUserRegistration(){
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(Constants.USER_DATA_FILE));
+			String line;
+			StringBuilder text = new StringBuilder();
+			while((line = br.readLine())!=null){
+				text.append(line);
+			}
+			JSONObject json = new JSONObject(text.toString());
+			return json;
+		} catch (FileNotFoundException e) {
+			Log.e("Reading user data","File doesn't exist");
+		}
+		catch (JSONException e1) {
+			Log.e("Reading user data", "JSON failure");
+		}
+		catch ( IOException e1) {
+			Log.e("Reading user data", "IO failure");
+		}
+		finally{
+			try {
+				if(null!=br)
+					br.close();
+			}
+			catch(IOException e){
+				Log.e("reading user data","Couldn't close user data file");
+			}
+			
+		}
+		return null;
+	}
 	
 		
 }
