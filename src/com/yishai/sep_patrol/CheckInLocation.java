@@ -36,6 +36,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	TextView nameTV;
 	TextView locationTV;
 	TextView commentsTV;
+	String userName="";
 	
 	String token;
 	
@@ -49,7 +50,18 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			startActivity(registrationIntent);
 		}
 		
-		setContentView(R.layout.activity_main);	
+		try {
+			 userName = userData.getString("first_name") + " "+userData.getString("last_name");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			Log.e("Fetching user data","Couldn't read user data: "+e.getMessage());
+		}
+		
+		
+		setContentView(R.layout.activity_main);
+		
+		TextView descriptionView = (TextView)findViewById(R.id.descView);
+		descriptionView.setText("Hello, "+userName);
 		
 		nameTV = (TextView)findViewById(R.id.NameTB);
 		locationTV = (TextView)findViewById(R.id.LocationTB);
@@ -180,7 +192,11 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	private JSONObject getUserRegistration(){
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new FileReader(Constants.USER_DATA_FILE));
+			String[] files = this.fileList();
+			for(String file : files){
+				Log.i("checking context files",file);
+			}
+			br = new BufferedReader(new FileReader(getFilesDir()+"/"+Constants.USER_DATA_FILE));
 			String line;
 			StringBuilder text = new StringBuilder();
 			while((line = br.readLine())!=null){
@@ -189,7 +205,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			JSONObject json = new JSONObject(text.toString());
 			return json;
 		} catch (FileNotFoundException e) {
-			Log.e("Reading user data","File doesn't exist");
+			Log.e("Reading user data","File doesn't exist - "+e.getMessage());
 		}
 		catch (JSONException e1) {
 			Log.e("Reading user data", "JSON failure");

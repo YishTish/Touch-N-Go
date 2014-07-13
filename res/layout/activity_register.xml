@@ -1,52 +1,85 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RegistrationLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="${relativePackage}.${activityClass}" >
+    >
 
-    <EditText
-        android:id="@+id/FirstNameTB"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/titleView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="82dp"
-        android:ems="10"
-        android:hint="@string/firstName"
-        android:inputType="textPersonName" >
+        android:layout_marginTop="20dp"
+        android:text="@string/Registration_Title"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <requestFocus />
-    </EditText>
-
-    <EditText
-        android:id="@+id/LastNameTB"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_below="@id/titleView"
+        android:gravity="center" 
+        android:id="@+id/FormLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/FirstNameTB"
-        android:layout_below="@+id/FirstNameTB"
-        android:layout_marginTop="30dp"
-        android:ems="10"
-        android:hint="@string/LastName"
-        android:inputType="textPersonName" />
+        android:orientation="vertical" 
+        android:layout_marginTop="20dp"
+        >
 
-    <EditText
-        android:id="@+id/EmailAddressTB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/LastNameTB"
-        android:layout_below="@+id/LastNameTB"
-        android:layout_marginTop="30dp"
-        android:ems="10"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress" />
+        <RelativeLayout
+            android:id="@+id/fnameRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/apptheme_btn_default_disabled_holo_light" >
 
-    <Button
-        android:id="@+id/ResgiserButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/EmailAddressTB"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:text="@string/Register" />
+            <EditText
+                android:id="@+id/FirstNameTB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/firstName"
+                android:inputType="textPersonName" />
+        </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/lnameRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/apptheme_btn_default_disabled_holo_light" >
+
+            <EditText
+                android:id="@+id/LastNameTB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/LastName"
+                android:inputType="textPersonName" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lemailRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/apptheme_btn_default_disabled_holo_light" >
+
+            <EditText
+                android:id="@+id/EmailAddressTB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/submitRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/ResgiserButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Register" />
+        </RelativeLayout>
+    </LinearLayout>
+  
 </RelativeLayout>

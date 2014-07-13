@@ -80,6 +80,7 @@ public class RegisterActivity extends Activity {
 			FileOutputStream fos = openFileOutput(Constants.USER_DATA_FILE, Context.MODE_PRIVATE);
 			fos.write(data.toString().getBytes());
 			fos.close();
+			Log.e("Saving registration data", data.toString());
 	}
 	
 	

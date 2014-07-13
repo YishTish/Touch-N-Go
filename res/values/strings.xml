@@ -13,5 +13,6 @@
     <string name="LastName">Last (Sir) Name</string>
     <string name="email">Email</string>
     <string name="Register">Register</string>
+    <string name="Registration_Title">SEP Patrol Registration</string>
 
 </resources>

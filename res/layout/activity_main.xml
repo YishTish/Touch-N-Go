@@ -1,4 +1,3 @@
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,68 +10,82 @@
         android:layout_height="wrap_content"
         android:text="@string/ScreenDescription" />
 
-    <TextView
-        android:id="@+id/nameView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/formLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/descView"
-        android:layout_marginTop="44dp"
-        android:text="@string/YourName" />
+        android:layout_marginTop="15dp"
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/locationView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/nameView"
-        android:layout_below="@+id/nameView"
-        android:layout_marginTop="44dp"
-        android:text="@string/CurrentLocation" />
+        <RelativeLayout
+            android:id="@+id/commentsRow"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/apptheme_btn_default_disabled_holo_light"
+            android:gravity="center" >
 
-    <EditText
-        android:id="@+id/NameTB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/locationView"
-        android:layout_alignRight="@+id/LocationTB"
-        android:ems="10"
-        android:inputType="textPersonName" />
+            <EditText
+                android:id="@+id/CommentsTB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/Comments"
+                android:inputType="textMultiLine|textLongMessage" />
+        </RelativeLayout>
 
-    <EditText
-        android:id="@+id/LocationTB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/commentsView"
-        android:layout_alignLeft="@+id/CommentsTB"
-        android:layout_alignRight="@+id/CommentsTB"
-        android:layout_below="@+id/NameTB"
-        android:ems="10"
-        android:inputType="text" />
+        <RelativeLayout
+            android:id="@+id/NameRow"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/apptheme_btn_default_disabled_holo_light"
+            android:gravity="center" >
 
-    <TextView
-        android:id="@+id/commentsView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/locationView"
-        android:layout_below="@+id/locationView"
-        android:layout_marginTop="36dp"
-        android:text="@string/Comments" />
+            <EditText
+                android:id="@+id/NameTB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:ems="10"
+                android:hint="@string/YourName"
+                android:inputType="textPersonName" />
+        </RelativeLayout>
 
-    <Button
-        android:id="@+id/SubmitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/CommentsTB"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:text="@string/CheckIN" />
+        <RelativeLayout
+            android:id="@+id/locationRow"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/apptheme_btn_default_disabled_holo_light"
+            android:gravity="center" >
 
-    <EditText
-        android:id="@+id/CommentsTB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/commentsView"
-        android:layout_toRightOf="@+id/locationView"
-        android:ems="10"
-        android:inputType="textMultiLine|textLongMessage" />
+            <EditText
+                android:id="@+id/LocationTB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/CurrentLocation"
+                android:inputType="text" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/SubmitLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/SubmitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/CheckIN" />
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>
