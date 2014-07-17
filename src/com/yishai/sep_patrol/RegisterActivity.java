@@ -26,7 +26,9 @@ public class RegisterActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.e("Where's null","haven't called create parent");
 		super.onCreate(savedInstanceState);
+		Log.e("Where's null","Registration activity created");
 		setContentView(R.layout.activity_register);
 		
 		fNameTV = (TextView) findViewById(R.id.FirstNameTB);
@@ -35,6 +37,7 @@ public class RegisterActivity extends Activity {
 		Button registerB = (Button) findViewById(R.id.ResgiserButton);
 		
 		registerB.setOnClickListener(registrationListener);
+		Log.e("Looking for null","Got here. Look further");
 	}
 		
 

@@ -4,73 +4,13 @@
     android:layout_height="match_parent"
     tools:context="${packageName}.${activityClass}" >
 
-    <TextView
-        android:id="@+id/descView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/ScreenDescription" />
-
     <LinearLayout
         android:id="@+id/formLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/descView"
         android:layout_marginTop="15dp"
         android:orientation="vertical" >
-
-        <RelativeLayout
-            android:id="@+id/commentsRow"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/apptheme_btn_default_disabled_holo_light"
-            android:gravity="center" >
-
-            <EditText
-                android:id="@+id/CommentsTB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/Comments"
-                android:inputType="textMultiLine|textLongMessage" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/NameRow"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@drawable/apptheme_btn_default_disabled_holo_light"
-            android:gravity="center" >
-
-            <EditText
-                android:id="@+id/NameTB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:ems="10"
-                android:hint="@string/YourName"
-                android:inputType="textPersonName" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/locationRow"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/apptheme_btn_default_disabled_holo_light"
-            android:gravity="center" >
-
-            <EditText
-                android:id="@+id/LocationTB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/CurrentLocation"
-                android:inputType="text" />
-        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/SubmitLayout"
@@ -78,14 +18,56 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center" >
-
-            <Button
-                android:id="@+id/SubmitButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/CheckIN" />
         </RelativeLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/scnButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/formLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="98dp"
+        android:minHeight="100dip"
+        android:minWidth="150dip"
+        android:text="@string/scnBtnTxt" />
+
+    <RelativeLayout
+        android:id="@+id/commentsRow"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/SubmitButton"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="1"
+        android:background="@drawable/apptheme_btn_default_disabled_holo_light"
+        android:gravity="center"
+        android:visibility="invisible" >
+
+        <EditText
+            android:id="@+id/CommentsTB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/Comments"
+            android:inputType="textMultiLine|textLongMessage" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/descView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/formLayout"
+        android:layout_marginTop="18dp"
+        android:text="@string/ScreenDescription" />
+
+    <Button
+        android:id="@+id/SubmitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scnButton"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/CheckIN" />
 
 </RelativeLayout>

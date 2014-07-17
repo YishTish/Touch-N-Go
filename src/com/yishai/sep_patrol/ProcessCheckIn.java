@@ -38,6 +38,8 @@ public class ProcessCheckIn extends AsyncTask<String, Void, String> {
 				list.add(new BasicNameValuePair("Location" ,params.get(1)));
 			if(params.get(2)!=null && !"".equals(params.get(2)))
 				list.add(new BasicNameValuePair("Comments" ,params.get(2)));
+			if(params.get(3)!=null && !"".equals(params.get(3)))
+				list.add(new BasicNameValuePair("Timestamp" ,params.get(3)));
 			return list;
 		}
 		

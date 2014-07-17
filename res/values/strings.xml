@@ -14,5 +14,8 @@
     <string name="email">Email</string>
     <string name="Register">Register</string>
     <string name="Registration_Title">SEP Patrol Registration</string>
+    <string name="scnBtnTxt">Scan</string>
+    <string name="title_activity_sandbox">Sandbox</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

@@ -10,6 +10,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".CheckInApplication"
@@ -26,6 +27,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.google.zxing.client.android.CaptureActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -34,6 +41,10 @@
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register" >
+        </activity>
+        <activity
+            android:name=".Sandbox"
+            android:label="@string/title_activity_sandbox" >
         </activity>
     </application>
 
