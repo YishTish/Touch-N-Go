@@ -466,15 +466,15 @@ int drawable launcher_icon 0x7f0200ed
 int drawable powered_by_google_dark 0x7f0200ee
 int drawable powered_by_google_light 0x7f0200ef
 int drawable share_via_barcode 0x7f0200f0
-int id CommentsTB 0x7f0a0057
+int id CommentsTB 0x7f0a005a
 int id EmailAddressTB 0x7f0a0064
 int id FirstNameTB 0x7f0a0060
 int id FormLayout 0x7f0a005e
 int id LastNameTB 0x7f0a0062
 int id RegistrationLayout 0x7f0a005c
 int id ResgiserButton 0x7f0a0066
-int id SubmitButton 0x7f0a005a
-int id SubmitLayout 0x7f0a0058
+int id SubmitButton 0x7f0a0059
+int id SubmitLayout 0x7f0a0056
 int id action_bar 0x7f0a0035
 int id action_bar_activity_content 0x7f0a002e
 int id action_bar_container 0x7f0a0034
@@ -502,7 +502,7 @@ int id buy_with_google 0x7f0a0015
 int id checkbox 0x7f0a0046
 int id classic 0x7f0a0018
 int id collapseActionView 0x7f0a0027
-int id commentsRow 0x7f0a0056
+int id commentsRow 0x7f0a0058
 int id contents_supplement_text_view 0x7f0a0077
 int id contents_text_view 0x7f0a0076
 int id decode 0x7f0a0000
@@ -571,7 +571,7 @@ int id result_view 0x7f0a006f
 int id return_scan_result 0x7f0a0006
 int id sandbox 0x7f0a000f
 int id satellite 0x7f0a0009
-int id scnButton 0x7f0a0059
+int id scnButton 0x7f0a0057
 int id search_badge 0x7f0a004b
 int id search_bar 0x7f0a004a
 int id search_button 0x7f0a004c

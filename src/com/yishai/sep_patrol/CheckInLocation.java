@@ -4,12 +4,20 @@ package com.yishai.sep_patrol;
 
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,7 +29,10 @@ import com.google.zxing.client.android.CaptureActivity;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -113,6 +124,8 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	private class launchQrListener implements OnClickListener{
 			@Override
 			public void onClick(View v) {
+				
+				
 				Toast.makeText(CheckInLocation.this,"Launching QR scanner", Toast.LENGTH_SHORT).show();
 				Intent qrIntent = new Intent(getApplicationContext(),CaptureActivity.class);
 				qrIntent.setAction("com.google.zxing.client.android.SCAN");
@@ -130,7 +143,9 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		public void onClick(View v) {
 		//	String accountName = getAccountName();
 			//@TODO: Get time from network, and if fails get from device and add comment
-			long currentTS = System.currentTimeMillis()/1000;
+			//long currentTS = System.currentTimeMillis()/1000;
+			long currentTS = getTimeStamp();
+			Log.i("Checking in","currentTS = "+currentTS);
 			submitBtn.setText("sending check-in data...");
 			submitBtn.setEnabled(false);
 			List<String> params = new ArrayList<String>();
@@ -147,6 +162,66 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			//checkIn(CheckInLocation.this);
 		}
 	}
+	
+	private boolean haveNetworkConnection() {
+	    boolean haveConnectedWifi = false;
+	    boolean haveConnectedMobile = false;
+
+	    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+	    for (NetworkInfo ni : netInfo) {
+	        if (ni.getType() == ConnectivityManager.TYPE_WIFI)
+	            if (ni.isConnected())
+	                return true;
+	        if (ni.getType() == ConnectivityManager.TYPE_MOBILE)
+	            if (ni.isConnected())
+	                return true;
+	    }
+	    return false;
+	}
+	
+	private long getTimeStamp(){
+		//@TODO: Get the time from the network. if no response from network, get the time
+		//from the device clock. 
+		//If returning time from device, return as negative number. Otherwise, positive.
+		
+		if(!haveNetworkConnection())
+			return (-System.currentTimeMillis());
+		
+	        
+	        try{
+	            //Make the Http connection so we can retrieve the time
+	            HttpClient httpclient = new DefaultHttpClient();
+	            // I am using yahoos api to get the time
+	            HttpResponse response = httpclient.execute(new
+	            HttpGet("http://developer.yahooapis.com/TimeService/V1/getTime?appid=YahooDemo"));
+	            StatusLine statusLine = response.getStatusLine();
+	            if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+	                ByteArrayOutputStream out = new ByteArrayOutputStream();
+	                response.getEntity().writeTo(out);
+	                out.close();
+	                // The response is an xml file and i have stored it in a string
+	                String responseString = out.toString();
+	                Log.d("Response", responseString);
+	                //We have to parse the xml file using any parser, but since i have to 
+	                //take just one value i have deviced a shortcut to retrieve it
+	                int x = responseString.indexOf("<Timestamp>");
+	                int y = responseString.indexOf("</Timestamp>");
+	                //I am using the x + "<Timestamp>" because x alone gives only the start value
+	                Log.d("Response", responseString.substring(x + "<Timestamp>".length(),y) );
+	                String timestamp =  responseString.substring(x + "<Timestamp>".length(),y);
+	                // The time returned is in UNIX format so i need to multiply it by 1000 to use it
+	                return Long.parseLong(timestamp);
+	            } else{
+	                //Closes the connection.
+	                response.getEntity().getContent().close();
+	                throw new IOException(statusLine.getReasonPhrase());
+	                
+	            }
+	        }catch (Exception e) {
+	        	return (-System.currentTimeMillis());
+	        } 
+		}
 	
 	private void manageUserData(){
 		JSONObject userData = getUserRegistration();
