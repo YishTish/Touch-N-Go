@@ -31,6 +31,9 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -60,7 +63,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	String userName="";
 	String locationCode ="";
 	String comments = "";
-	
+		
 	String token;
 	
 	
@@ -88,6 +91,11 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		submitBtn.setOnClickListener(new submitListener());
 		
 		commentsTV.setVisibility(TextView.INVISIBLE);
+		
+		LocationManager locManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+		LocationController lc = new LocationController();
+		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000*360, 1000, lc);
+		//locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, 11);
 	}
 	
 	private void loadSavedVariables(Bundle savedInstance){
@@ -111,7 +119,6 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		if(null != this.userName && !"".equals(userName)){
 			TextView descriptionView = (TextView)findViewById(R.id.descView);
@@ -414,6 +421,5 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		}
 		return null;
 	}
-	
 		
 }
