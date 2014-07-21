@@ -1,5 +1,6 @@
 package com.yishai.sep_patrol;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,11 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -43,8 +48,39 @@ public class ProcessCheckIn extends AsyncTask<String, Void, String> {
 			return list;
 		}
 		
+		
+		public JSONObject genrateJson() {
+			JSONObject json = new JSONObject();
+			try {
+				 List<NameValuePair> list = collectParams();
+				 JSONStringer jsonString = new JSONStringer();
+				 
+				 jsonString.object();
+				 
+				 for (int i = 0; i < list.size(); i++) {
+					 
+			         jsonString.key(list.get(i).getName()).value(list.get(i).getValue());
+				}
+				 jsonString.endObject();
+				 
+				} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			return json;
+		}
+		
+		/*void saveRegistrationData(JSONObject data) throws IOException{
+			
+			FileOutputStream fos = openFileOutput(Constants.USER_DATA_FILE, Context.MODE_PRIVATE);
+			fos.write(data.toString().getBytes());
+			fos.close();
+			Log.e("Saving registration data", data.toString());
+	}*/
+		
 		@Override
 		protected String doInBackground(String... params) {
+			
 			HttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(Constants.GSHEET_URL);
 			
@@ -74,10 +110,19 @@ public class ProcessCheckIn extends AsyncTask<String, Void, String> {
 			return serverResponse;
 		}
 		
+		
+		@Override
+		protected void onPreExecute() {
+		// TODO Auto-generated method stub
+		super.onPreExecute();
+		
+		}
+		
 		@Override
 		protected void onPostExecute(String result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
+		
 		delegate.processFinish(result);
 		}
 }

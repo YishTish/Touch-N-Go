@@ -144,7 +144,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		//	String accountName = getAccountName();
 			//@TODO: Get time from network, and if fails get from device and add comment
 			//long currentTS = System.currentTimeMillis()/1000;
-			long currentTS = getTimeStamp();
+		/*	long currentTS = getTimeStamp();
 			Log.i("Checking in","currentTS = "+currentTS);
 			submitBtn.setText("sending check-in data...");
 			submitBtn.setEnabled(false);
@@ -158,8 +158,10 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			//@TODO: Send json document instead of raw variables
 			ProcessCheckIn task = new ProcessCheckIn(params);
 			task.setDelegate(CheckInLocation.this);
-			task.execute();
-			//checkIn(CheckInLocation.this);
+			task.execute(); */
+			
+			
+			checkIn(CheckInLocation.this);
 		}
 	}
 	
@@ -332,20 +334,37 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	
 	private void checkIn(HandleAsyncResponse handler){
 		
-		long currentTS = System.currentTimeMillis()/1000;
+		/*
 		submitBtn.setText("sending check-in data...");
 		submitBtn.setEnabled(false);
-		List<String> params = new ArrayList<String>();
-		params.add(this.userName);
-		params.add(locationCode);
-		params.add(commentsTV.getText().toString());
-		params.add(Long.toString(currentTS));
 		
+		
+		//@TODO change constructor to accept json
 		ProcessCheckIn task = new ProcessCheckIn(params);
 		task.setDelegate(handler);
 		task.execute();
+		*/
+	}
+	
+	private JSONObject collectParams () {
+		long currentTS = System.currentTimeMillis()/1000;
+		JSONObject json = new JSONObject();
+		try {
+				json.put("Name", this.userName);
+				json.put("Location", locationCode);
+				json.put("Comment",commentsTV.getText().toString());
+				json.put("Time Stamp",Long.toString(currentTS));
+		} catch (JSONException e) {
+			Log.e("creating checkin json", e.getMessage());
+			
+		}
+	
+		return json;
 	}
 
+	 /*private void createCheckingFile(){
+		 output
+	 }*/
 
 	protected void manageToken(String account) {
 		String scope="oauth2:https://www.googleapis.com/auth/drive.scripts";
