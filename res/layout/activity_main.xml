@@ -41,7 +41,7 @@
         android:layout_weight="1"
         android:background="@drawable/apptheme_btn_default_disabled_holo_light"
         android:gravity="center"
-        android:visibility="invisible" >
+        android:visibility="visible" >
 
         <EditText
             android:id="@+id/CommentsTB"
@@ -70,4 +70,5 @@
         android:gravity="center"
         android:text="@string/CheckIN" />
 
+   
 </RelativeLayout>

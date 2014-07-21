@@ -14,7 +14,6 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -31,14 +30,15 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -63,7 +63,10 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	String userName="";
 	String locationCode ="";
 	String comments = "";
-		
+	//The LocationController will be used to get the time and position of the user.
+	LocationController locationController;
+	
+	
 	String token;
 	
 	
@@ -93,9 +96,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		commentsTV.setVisibility(TextView.INVISIBLE);
 		
 		LocationManager locManager = (LocationManager)getSystemService(LOCATION_SERVICE);
-		LocationController lc = new LocationController();
-		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000*360, 1000, lc);
-		//locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, 11);
+		locationController = new LocationController(locManager);
 	}
 	
 	private void loadSavedVariables(Bundle savedInstance){
@@ -127,12 +128,28 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		changeButtonVisibility();
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		MenuInflater mi = getMenuInflater();
+		mi.inflate(R.menu.general_menu, menu);
+		return true;
+		//return super.onCreateOptionsMenu(menu);
+	}
 	
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		String title = item.getTitle().toString();
+		if("Settings".equals(title)){
+			registerUser();
+		}
+		// TODO Auto-generated method stub
+		return super.onOptionsItemSelected(item);
+	}
 	private class launchQrListener implements OnClickListener{
 			@Override
 			public void onClick(View v) {
-				
-				
 				Toast.makeText(CheckInLocation.this,"Launching QR scanner", Toast.LENGTH_SHORT).show();
 				Intent qrIntent = new Intent(getApplicationContext(),CaptureActivity.class);
 				qrIntent.setAction("com.google.zxing.client.android.SCAN");
@@ -140,7 +157,6 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 				startActivityForResult(qrIntent, 2);
 				launchQrBtn.setText("Please wait");
 				launchQrBtn.setEnabled(false);
-				
 			}
 	}
 	
@@ -148,10 +164,8 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		
 		@Override
 		public void onClick(View v) {
-		//	String accountName = getAccountName();
-			//@TODO: Get time from network, and if fails get from device and add comment
-			//long currentTS = System.currentTimeMillis()/1000;
-			long currentTS = getTimeStamp();
+			locationController.pingProvider();
+			long currentTS = locationController.getTimestampSeconds();
 			Log.i("Checking in","currentTS = "+currentTS);
 			submitBtn.setText("sending check-in data...");
 			submitBtn.setEnabled(false);
@@ -233,8 +247,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	private void manageUserData(){
 		JSONObject userData = getUserRegistration();
 		if(userData==null){
-			Intent registrationIntent = new Intent(CheckInLocation.this, RegisterActivity.class);
-			startActivity(registrationIntent);
+			registerUser();
 		}
 		else{
 			try {
@@ -246,6 +259,11 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		}
 		
 		
+	}
+	
+	public void registerUser(){
+		Intent registrationIntent = new Intent(CheckInLocation.this, RegisterActivity.class);
+		startActivity(registrationIntent);
 	}
 	
 	//Code to run when Handling the response from the check-in Async process.
@@ -347,10 +365,14 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		params.add(locationCode);
 		params.add(commentsTV.getText().toString());
 		params.add(Long.toString(currentTS));
-		
+		/*
 		ProcessCheckIn task = new ProcessCheckIn(params);
 		task.setDelegate(handler);
 		task.execute();
+		*/
+		locationController.pingProvider();
+		long ts = locationController.getTimestamp();
+		Toast.makeText(this, "Network time: "+ts, Toast.LENGTH_SHORT).show();
 	}
 
 
