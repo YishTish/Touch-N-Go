@@ -197,6 +197,19 @@ private class tempListener implements OnClickListener{
 		}
 	}
 	
+private class tempListener implements OnClickListener{
+		
+		@Override
+		public void onClick(View v) {
+			//@TODO: Save parameters to json document
+			//@TODO: Send json document instead of raw variables
+			TestOAuth task = new TestOAuth();
+			task.setDelegate(CheckInLocation.this);
+			task.execute();
+			//checkIn(CheckInLocation.this);
+		}
+	}
+	
 	private boolean haveNetworkConnection() {
 	    boolean haveConnectedWifi = false;
 	    boolean haveConnectedMobile = false;
