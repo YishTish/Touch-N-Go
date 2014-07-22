@@ -87,8 +87,8 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		
 		
 		submitBtn = (Button)findViewById(R.id.SubmitButton);
-		submitBtn.setVisibility(Button.INVISIBLE);
-		submitBtn.setOnClickListener(new submitListener());
+		//submitBtn.setVisibility(Button.INVISIBLE);
+		submitBtn.setOnClickListener(new tempListener());
 		
 		commentsTV.setVisibility(TextView.INVISIBLE);
 		
@@ -164,6 +164,19 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			//@TODO: Save parameters to json document
 			//@TODO: Send json document instead of raw variables
 			ProcessCheckIn task = new ProcessCheckIn(params);
+			task.setDelegate(CheckInLocation.this);
+			task.execute();
+			//checkIn(CheckInLocation.this);
+		}
+	}
+	
+private class tempListener implements OnClickListener{
+		
+		@Override
+		public void onClick(View v) {
+			//@TODO: Save parameters to json document
+			//@TODO: Send json document instead of raw variables
+			TestOAuth task = new TestOAuth();
 			task.setDelegate(CheckInLocation.this);
 			task.execute();
 			//checkIn(CheckInLocation.this);
