@@ -125,7 +125,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			TextView descriptionView = (TextView)findViewById(R.id.descView);
 			descriptionView.setText("Hello "+userName);
 		}
-		changeButtonVisibility();
+		//changeButtonVisibility();
 	}
 	
 	@Override
