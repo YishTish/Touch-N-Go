@@ -5,6 +5,4 @@
         android:title="@string/Settings" 
         android:showAsAction="never" 
         android:menuCategory="system"></item>
-    
-
 </menu>
