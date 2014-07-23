@@ -1,18 +1,14 @@
 package com.yishai.sep_patrol;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.util.Log;
 
 public class TestOAuth extends ProcessCheckIn{
@@ -20,25 +16,48 @@ public class TestOAuth extends ProcessCheckIn{
 	
 	public TestOAuth() {
 		super(new ArrayList<String>());
+		token = "";
 	}
 
-	final static String LOGTAG = "TestOAuth"; 
+	final static String LOGTAG = "TestOAuth";
+	private String token;
+	
+	public void setToken(String t){
+		token = t;
+	}
 	
 	@Override
 	protected String doInBackground(String... params) {
 		HttpClient client = new DefaultHttpClient();
-		HttpGet get = new HttpGet(Constants.TEMP_GSHEET);
+		//HttpGet get = new HttpGet(Constants.TEMP_GSHEET);
+		//HttpParams getParams = new BasicHttpParams();
 		
+		//getParams.setParameter("access_token", token);
+		//get.setParams(getParams);
+		//Log.e(LOGTAG,get.getRequestLine().getUri());
 		String serverResponse="";
 		try {
-			HttpResponse response = client.execute(get);
-			int responseCode = response.getStatusLine().getStatusCode();
+			 URL url = new URL(Constants.TEMP_GSHEET +"?access_token="+ token);
+			 HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			InputStream is = con.getInputStream();
+			int responseCode = con.getResponseCode();
+			//HttpResponse response = client.execute(get);
+			//int responseCode = response.getStatusLine().getStatusCode();
 			if(responseCode==200){
-				HttpEntity responseEntity = response.getEntity();
-				if(responseEntity.getContentLength()==0){
-					serverResponse  = "Request returned empty";
+				StringBuilder sb = new StringBuilder();
+				byte[] line = new byte[1024];
+				while(is.read(line, 0, line.length)>=0){
+					sb.append(line);
 				}
-				else{
+				serverResponse = sb.toString();
+				if(serverResponse.length() == 0){
+					serverResponse = "No response";
+				}
+			//	HttpEntity responseEntity = response.getEntity();
+			//	if(responseEntity.getContentLength()==0){
+			//		serverResponse  = "Request returned empty";
+			  //	}
+				/*else{
 					StringBuilder sb  = new StringBuilder();
 					try{
 						BufferedReader br = new BufferedReader(new InputStreamReader(responseEntity.getContent()),65728);
@@ -54,7 +73,7 @@ public class TestOAuth extends ProcessCheckIn{
 					catch(Exception e){
 						Log.e(LOGTAG, "exception when reading response: " +e.getMessage());
 					}
-				}
+				}*/
 			}
 			else{
 				serverResponse =  "Request failed. Returned code: "+responseCode;
