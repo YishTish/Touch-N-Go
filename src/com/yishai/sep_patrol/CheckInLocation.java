@@ -338,12 +338,12 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		submitBtn.setText("sending check-in data...");
 		submitBtn.setEnabled(false);
 		
-		
+		*/
 		//@TODO change constructor to accept json
-		ProcessCheckIn task = new ProcessCheckIn(params);
+		ProcessCheckIn task = new ProcessCheckIn(collectParams());
 		task.setDelegate(handler);
 		task.execute();
-		*/
+		
 	}
 	
 	private JSONObject collectParams () {

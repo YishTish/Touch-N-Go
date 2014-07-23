@@ -11,6 +11,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -25,16 +26,16 @@ public class ProcessCheckIn extends AsyncTask<String, Void, String> {
 	
 		
 		HandleAsyncResponse delegate = null;
-		List<String> params;
+		JSONObject json = new JSONObject();
 		
 		public void setDelegate(HandleAsyncResponse delegate) {
 			this.delegate = delegate;
 		}
 		
-		public ProcessCheckIn(List<String> params) {
-			this.params = params;
+		public ProcessCheckIn(JSONObject params) {
+			json = params;
 		}
-
+/*
 		private List<NameValuePair> collectParams(){
 			List<NameValuePair> list = new ArrayList<NameValuePair>();
 			if(params.get(0)!=null && !"".equals(params.get(0)))
@@ -47,8 +48,8 @@ public class ProcessCheckIn extends AsyncTask<String, Void, String> {
 				list.add(new BasicNameValuePair("Timestamp" ,params.get(3)));
 			return list;
 		}
-		
-		
+		*/
+		/*
 		public JSONObject genrateJson() {
 			JSONObject json = new JSONObject();
 			try {
@@ -68,7 +69,7 @@ public class ProcessCheckIn extends AsyncTask<String, Void, String> {
 				e1.printStackTrace();
 			}
 			return json;
-		}
+		} */
 		
 		/*void saveRegistrationData(JSONObject data) throws IOException{
 			
@@ -78,6 +79,12 @@ public class ProcessCheckIn extends AsyncTask<String, Void, String> {
 			Log.e("Saving registration data", data.toString());
 	}*/
 		
+		private String jsonToString() {
+			
+			String string = json.toString();
+			return string;
+		}
+		
 		@Override
 		protected String doInBackground(String... params) {
 			
@@ -85,10 +92,11 @@ public class ProcessCheckIn extends AsyncTask<String, Void, String> {
 			HttpPost post = new HttpPost(Constants.GSHEET_URL);
 			
 			String serverResponse="";
-			List<NameValuePair> args =  collectParams();
+			
 			
 			try {
-				post.setEntity(new UrlEncodedFormEntity(args));
+				
+				post.setEntity(new StringEntity(jsonToString()));
 				HttpResponse response = client.execute(post);
 				int responseCode = response.getStatusLine().getStatusCode();
 				if(responseCode==200)
