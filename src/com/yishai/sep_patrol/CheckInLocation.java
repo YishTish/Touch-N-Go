@@ -39,6 +39,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,15 +80,18 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		//Get user details, either from an existing file, or from registration process (which creates the file)
 		manageUserData();
 
-		launchQrBtn = (Button)findViewById(R.id.scnButton);
+		
+		launchQrBtn = (Button)findViewById(R.id.scan_unpressed);
 		launchQrBtn.setOnClickListener(new launchQrListener());
 		
 		
-		submitBtn = (Button)findViewById(R.id.SubmitButton);
-		submitBtn.setVisibility(Button.INVISIBLE);
-		submitBtn.setOnClickListener(new submitListener());
 		
-		commentsTV.setVisibility(TextView.INVISIBLE);
+		
+		submitBtn = (Button)findViewById(R.id.submit_unpressed);
+		//submitBtn.setVisibility(Button.INVISIBLE);
+		submitBtn.setOnClickListener(new submitListener());
+
+		//commentsTV.setVisibility(TextView.INVISIBLE);
 	}
 	
 	private void loadSavedVariables(Bundle savedInstance){
@@ -121,6 +125,8 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	}
 	
 	
+	
+	
 	private class launchQrListener implements OnClickListener{
 			@Override
 			public void onClick(View v) {
@@ -131,10 +137,12 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 				qrIntent.setAction("com.google.zxing.client.android.SCAN");
 				qrIntent.putExtra("SAVE_HISTORY",false);
 				startActivityForResult(qrIntent, 2);
-				launchQrBtn.setText("Please wait");
+			//	launchQrBtn.setText("Please wait");
 				launchQrBtn.setEnabled(false);
 				
 			}
+			
+			
 	}
 	
 	private class submitListener implements OnClickListener{
@@ -252,7 +260,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			
 			Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
 			changeButtonVisibility();
-			submitBtn.setText(R.string.CheckIN);
+			//submitBtn.setText(R.string.CheckIN);
 
 	}
 	
