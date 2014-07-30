@@ -2,9 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@drawable/background_bitmap"
     tools:context="${packageName}.${activityClass}" >
 
+    
+   <!--   android:background="@drawable/background_bitmap"-->
+    
     <LinearLayout
         android:id="@+id/formLayout"
         android:layout_width="match_parent"
@@ -54,16 +56,16 @@
         android:textColor="@color/apptheme_color" />
 
   <Button
-        android:id="@+id/scan_unpressed"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/descView"
-        android:background="@drawable/scan_selector" />
+      android:id="@+id/scan_unpressed"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/descView"
+      android:background="@drawable/scan_selector" />
 
 <Button
         android:id="@+id/submit_unpressed"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/descView"
         android:background="@drawable/submit_selector" />
     <!-- 

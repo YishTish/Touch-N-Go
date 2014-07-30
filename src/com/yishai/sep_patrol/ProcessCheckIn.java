@@ -1,7 +1,10 @@
 package com.yishai.sep_patrol;
 
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class ProcessCheckIn extends AsyncTask<String, Void, String> {
+public class ProcessCheckIn extends AsyncTask<String, Void, JSONObject> {
 	
 		
 		HandleAsyncResponse delegate = null;
@@ -35,99 +38,65 @@ public class ProcessCheckIn extends AsyncTask<String, Void, String> {
 		public ProcessCheckIn(JSONObject params) {
 			json = params;
 		}
-/*
-		private List<NameValuePair> collectParams(){
-			List<NameValuePair> list = new ArrayList<NameValuePair>();
-			if(params.get(0)!=null && !"".equals(params.get(0)))
-				list.add(new BasicNameValuePair("Name" ,params.get(0)));
-			if(params.get(1)!=null && !"".equals(params.get(1)))
-				list.add(new BasicNameValuePair("Location" ,params.get(1)));
-			if(params.get(2)!=null && !"".equals(params.get(2)))
-				list.add(new BasicNameValuePair("Comments" ,params.get(2)));
-			if(params.get(3)!=null && !"".equals(params.get(3)))
-				list.add(new BasicNameValuePair("Timestamp" ,params.get(3)));
-			return list;
-		}
-		*/
-		/*
-		public JSONObject genrateJson() {
-			JSONObject json = new JSONObject();
-			try {
-				 List<NameValuePair> list = collectParams();
-				 JSONStringer jsonString = new JSONStringer();
-				 
-				 jsonString.object();
-				 
-				 for (int i = 0; i < list.size(); i++) {
-					 
-			         jsonString.key(list.get(i).getName()).value(list.get(i).getValue());
-				}
-				 jsonString.endObject();
-				 
-				} catch (JSONException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			return json;
-		} */
 		
-		/*void saveRegistrationData(JSONObject data) throws IOException{
-			
-			FileOutputStream fos = openFileOutput(Constants.USER_DATA_FILE, Context.MODE_PRIVATE);
-			fos.write(data.toString().getBytes());
-			fos.close();
-			Log.e("Saving registration data", data.toString());
-	}*/
-		
+	/*
 		private String jsonToString() {
 			
 			String string = json.toString();
 			return string;
 		}
-		
+	*/
 		@Override
-		protected String doInBackground(String... params) {
+		protected JSONObject doInBackground(String... params) {
 			
 			HttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(Constants.GSHEET_URL);
 			
-			String serverResponse="";
+			JSONObject serverResponse=new JSONObject();
 			
 			
-			try {
-				
-				post.setEntity(new StringEntity(jsonToString()));
-				HttpResponse response = client.execute(post);
-				int responseCode = response.getStatusLine().getStatusCode();
-				if(responseCode==200)
-					serverResponse = "Check-in Succeed";
-				else
-					serverResponse = "Check-in failure. Server response code: "+responseCode;
-			} catch (ClientProtocolException e) {
-				Log.e("Client Error","Client protocol error: "+ e.getMessage());
-				serverResponse = "Check-in failure, clientProtocol error";
-			} catch (IOException e) {
-				Log.e("IO Error","IO error: "+ e.getMessage());
-				serverResponse = "Check-in failure. Input/Output error";
+			try{
+				try {
+					Log.e("Sending checkin","json = "+json.toString());
+					post.setEntity(new StringEntity(json.toString()));
+					post.setHeader("Accept","application/json");
+					post.setHeader("Content-type","application/json");
+					HttpResponse response = client.execute(post);
+					int responseCode = response.getStatusLine().getStatusCode();
+					serverResponse.put("code", responseCode);
+					if(responseCode==200){
+						InputStream input = response.getEntity().getContent();
+						InputStreamReader incoming = new InputStreamReader(input);
+						BufferedReader reader = new BufferedReader(incoming);
+						StringBuilder strB = new StringBuilder();
+						String line;
+						while((line = reader.readLine()) != null){
+							strB.append(line);
+						}
+						serverResponse.put("text",  strB.toString());
+					}
+					else
+						serverResponse.put("text", "Check-in failure.");
+				} catch (ClientProtocolException e) {
+					Log.e("Client Error","Client protocol error: "+ e.getMessage());
+					serverResponse.put("text","Check-in failure, clientProtocol error");
+				} catch (IOException e) {
+					Log.e("IO Error","IO error: "+ e.getMessage());
+					serverResponse.put("text","Check-in failure. Input/Output error");
+				}
+				catch (Exception e) {
+					Log.e("Error", "General error: "+ e.getMessage());
+					serverResponse.put("text","Check-in failure - General exception");
+				}
 			}
-			catch (Exception e) {
-				Log.e("Error", "General error: "+ e.getMessage());
-				e.printStackTrace();
-				serverResponse = "Check-in failure";
+			catch (JSONException je){
+				Log.e("JSON Error", je.getMessage());
 			}
 			return serverResponse;
 		}
 		
-		
 		@Override
-		protected void onPreExecute() {
-		// TODO Auto-generated method stub
-		super.onPreExecute();
-		
-		}
-		
-		@Override
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(JSONObject result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
 		
