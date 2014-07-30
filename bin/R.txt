@@ -436,7 +436,7 @@ int drawable apptheme_textfield_focused_holo_light 0x7f0200cf
 int drawable background_bitmap 0x7f0200d0
 int drawable bg1px 0x7f0200d1
 int drawable bg_circ 0x7f0200d2
-int drawable bg_rect1px 0x7f0200d3
+int drawable bg_rect1px1 0x7f0200d3
 int drawable circle_button 0x7f0200d4
 int drawable comments_bg_1px 0x7f0200d5
 int drawable common_signin_btn_icon_dark 0x7f0200d6
