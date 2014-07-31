@@ -31,10 +31,6 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
 	<linkedResources>
-		<link>
-			<name>google</name>
-			<type>2</type>
-			<location>/Users/shmil/Software/adb/extras/google</location>
-		</link>
+		
 	</linkedResources>
 </projectDescription>
