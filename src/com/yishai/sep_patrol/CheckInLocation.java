@@ -5,19 +5,18 @@ package com.yishai.sep_patrol;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -79,15 +78,18 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		//Get user details, either from an existing file, or from registration process (which creates the file)
 		manageUserData();
 
-		launchQrBtn = (Button)findViewById(R.id.scnButton);
+		
+		launchQrBtn = (Button)findViewById(R.id.scan_unpressed);
 		launchQrBtn.setOnClickListener(new launchQrListener());
 		
 		
-		submitBtn = (Button)findViewById(R.id.SubmitButton);
-		submitBtn.setVisibility(Button.INVISIBLE);
-		submitBtn.setOnClickListener(new submitListener());
 		
-		commentsTV.setVisibility(TextView.INVISIBLE);
+		
+		submitBtn = (Button)findViewById(R.id.submit_unpressed);
+		//submitBtn.setVisibility(Button.INVISIBLE);
+		submitBtn.setOnClickListener(new submitListener());
+
+		//commentsTV.setVisibility(TextView.INVISIBLE);
 	}
 	
 	private void loadSavedVariables(Bundle savedInstance){
@@ -121,6 +123,8 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	}
 	
 	
+	
+	
 	private class launchQrListener implements OnClickListener{
 			@Override
 			public void onClick(View v) {
@@ -131,10 +135,12 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 				qrIntent.setAction("com.google.zxing.client.android.SCAN");
 				qrIntent.putExtra("SAVE_HISTORY",false);
 				startActivityForResult(qrIntent, 2);
-				launchQrBtn.setText("Please wait");
+			//	launchQrBtn.setText("Please wait");
 				launchQrBtn.setEnabled(false);
 				
 			}
+			
+			
 	}
 	
 	private class submitListener implements OnClickListener{
@@ -243,18 +249,37 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		
 	}
 	
+	
+	
 	//Code to run when Handling the response from the check-in Async process.
 	@Override
-	public void processFinish(String response) {
-			//Clear the textboxes
-			commentsTV.setText("");
-			comments = locationCode = "";
+	public void processFinish(JSONObject response) {
 			
-			Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+		//Clear the textboxes
+		commentsTV.setText("");
+		comments = locationCode = "";
+		try{
+			int responseCode = (int)response.get("code");
+			String responseText = (String)response.get("text");
+			if(responseCode == 200){
+				Toast.makeText(getApplicationContext(), responseText, Toast.LENGTH_LONG).show();
+				//submitBtn.setText(R.string.CheckIN);
+				deleteFile(Constants.CHECKIN_DATA_FILE);
+			}
+			else{
+				Toast.makeText(this,"Check-in failed. code: "+responseCode, Toast.LENGTH_SHORT).show();
+			}
+		}
+		catch(JSONException je){
+			Log.e("JSON failure","Failed to read JSON response from checkin");
+		}
+		finally{
 			changeButtonVisibility();
-			submitBtn.setText(R.string.CheckIN);
+		}
+		
 
 	}
+	
 	
 	//Currently not in use - needed for handling tokens to communicate with Google
 	private String getAccountName() {
@@ -338,22 +363,28 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		submitBtn.setText("sending check-in data...");
 		submitBtn.setEnabled(false);
 		
-		
-		//@TODO change constructor to accept json
-		ProcessCheckIn task = new ProcessCheckIn(params);
-		task.setDelegate(handler);
-		task.execute();
 		*/
+		JSONObject checkInData = saveParamsToFile(collectParams());
+		if(checkInData != null){
+			ProcessCheckIn task = new ProcessCheckIn(checkInData);
+			task.setDelegate(handler);
+			task.execute();
+		}
+		else{
+			Log.e("Checking in data", "No data in file to send");
+			Toast.makeText(this, "Failed to send check-in data. If problem persists, please notify", Toast.LENGTH_LONG).show();
+		}
+		
 	}
 	
 	private JSONObject collectParams () {
 		long currentTS = System.currentTimeMillis()/1000;
 		JSONObject json = new JSONObject();
 		try {
-				json.put("Name", this.userName);
-				json.put("Location", locationCode);
-				json.put("Comment",commentsTV.getText().toString());
-				json.put("Time Stamp",Long.toString(currentTS));
+				json.put(Constants.NAME_TXT, this.userName);
+				json.put(Constants.LOCATION_TXT, locationCode);
+				json.put(Constants.COMMENTS_TXT,commentsTV.getText().toString());
+				json.put(Constants.TIMESTAMP_TXT,Long.toString(currentTS));
 		} catch (JSONException e) {
 			Log.e("creating checkin json", e.getMessage());
 			
@@ -361,6 +392,50 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	
 		return json;
 	}
+	
+	private JSONObject saveParamsToFile(JSONObject data){
+		JSONArray dataArray;
+		JSONObject jsonObject = null;
+		try{
+			//deleteFile(Constants.CHECKIN_DATA_FILE);
+			try{
+				BufferedReader br = new BufferedReader(new FileReader(getFilesDir()+"/"+Constants.CHECKIN_DATA_FILE));
+				StringBuilder sb = new StringBuilder();
+				String line;
+				while((line = br.readLine())!=null){
+					sb.append(line);
+				}
+				br.close();
+
+				JSONObject fileData = new JSONObject(sb.toString());
+				Log.e("check-in process","file content: "+fileData.toString());
+				dataArray = (JSONArray)fileData.get("data");
+			}
+			catch(FileNotFoundException fnfe){
+				dataArray = new JSONArray();
+			}
+			dataArray.put(data);
+			jsonObject = new JSONObject();
+			jsonObject.put("data",dataArray);
+			
+			FileOutputStream fos = openFileOutput(Constants.CHECKIN_DATA_FILE, Context.MODE_PRIVATE);
+			byte[] jsonContent = jsonObject.toString().getBytes();
+			fos.write(jsonContent);
+			fos.close();
+		}
+		catch(JSONException e){
+			Log.e("Saving Check-in data", "JSON Error: "+e.getMessage());
+		}
+		catch(IOException ioe){
+			Log.e("Saving Check-in data","IO Exception: "+ioe.getMessage());
+		}
+		
+		Log.e("Saving registration data", data.toString());
+		if(jsonObject != null)
+			return jsonObject;
+		else 
+			return null;
+}
 
 	 /*private void createCheckingFile(){
 		 output

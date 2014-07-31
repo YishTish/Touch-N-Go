@@ -1,9 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     tools:context="${packageName}.${activityClass}" >
 
+    
+   <!--   android:background="@drawable/background_bitmap"-->
+    
     <LinearLayout
         android:id="@+id/formLayout"
         android:layout_width="match_parent"
@@ -15,30 +18,18 @@
         <RelativeLayout
             android:id="@+id/SubmitLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height= "0dp"
             android:layout_weight="1"
             android:gravity="center" >
         </RelativeLayout>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/scnButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/formLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="98dp"
-        android:minHeight="100dip"
-        android:minWidth="150dip"
-        android:text="@string/scnBtnTxt" />
-
     <RelativeLayout
         android:id="@+id/commentsRow"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/SubmitButton"
+        android:layout_below="@+id/formLayout"
         android:layout_centerHorizontal="true"
-        android:layout_weight="1"
         android:background="@drawable/apptheme_btn_default_disabled_holo_light"
         android:gravity="center"
         android:visibility="invisible" >
@@ -55,19 +46,47 @@
     <TextView
         android:id="@+id/descView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="75dp"
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/formLayout"
         android:layout_marginTop="18dp"
-        android:text="@string/ScreenDescription" />
+        android:background="@drawable/inputbox1pxios"
+        android:paddingTop="10dp"
+        android:text="@string/ScreenDescription"
+        android:textColor="@color/apptheme_color" />
 
-    <Button
-        android:id="@+id/SubmitButton"
+  <Button
+      android:id="@+id/scan_unpressed"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/descView"
+      android:background="@drawable/scan_selector" />
+
+<Button
+        android:id="@+id/submit_unpressed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/scnButton"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="@string/CheckIN" />
+        android:layout_below="@+id/descView"
+        android:background="@drawable/submit_selector" />
+    <!-- 
+    
+    <ImageView
+        android:id="@+id/scan_pressed"
+        android:contentDescription="scan pressed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/descView"
+        android:src="@drawable/scanbtn_pressed" />
 
+    
+    <ImageView
+        android:id="@+id/submit_pressed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/descView"
+        android:contentDescription="scan pressed"
+        android:src="@drawable/submit_pressed" />
+ -->
 </RelativeLayout>
