@@ -17,5 +17,6 @@
     <string name="scnBtnTxt">Scan</string>
     <string name="title_activity_sandbox">Sandbox</string>
     <string name="action_settings">Settings</string>
+    <string name="Settings">Settings</string>
 
 </resources>
