@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 /bin/*
 .classpath
 .project
 /.gitignore
 /lint.xml
 /project.properties
+=======
+/project.properties
+/.classpath
+/.project
+>>>>>>> 6c0591519dac967e70b68da9115ee065917f720f
