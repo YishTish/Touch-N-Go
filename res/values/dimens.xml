@@ -4,5 +4,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="testDimensions">10dp</dimen>
+    <dimen name="ButtonTextHeight">40dp</dimen>
 
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SEP_Patrol</string>
+    <string name="app_name">BEEN THERE (done that)</string>
     <string name="hello_world">Hello world!</string>
     <string name="YourName">Your Name</string>
     <string name="CurrentLocation">Current Location</string>
@@ -14,9 +14,10 @@
     <string name="email">Email</string>
     <string name="Register">Register</string>
     <string name="Registration_Title">SEP Patrol Registration</string>
-    <string name="scnBtnTxt">Scan</string>
+    <string name="scnBtnTxt">Been There</string>
     <string name="title_activity_sandbox">Sandbox</string>
     <string name="action_settings">Settings</string>
     <string name="Settings">Settings</string>
+    <string name="submitBtnTxt">Done That</string>
 
 </resources>
