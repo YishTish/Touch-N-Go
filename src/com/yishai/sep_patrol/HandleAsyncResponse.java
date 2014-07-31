@@ -1,6 +1,8 @@
 package com.yishai.sep_patrol;
 
+import org.json.JSONObject;
+
 public interface HandleAsyncResponse {
 
-	void processFinish(String response);
+	void processFinish(JSONObject response);
 }
