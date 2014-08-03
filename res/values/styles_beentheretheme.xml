@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="EditTextBeenThereTheme" parent="android:Widget.EditText">
+	  <item name="android:background">@drawable/beentheretheme_edit_text_holo_light</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="CheckBoxBeenThereTheme" parent="android:Widget.CompoundButton.CheckBox">
+      <item name="android:button">@drawable/beentheretheme_btn_check_holo_light</item>
+  </style>
+
+  <style name="RadioButtonBeenThereTheme" parent="android:Widget.CompoundButton.RadioButton">
+      <item name="android:button">@drawable/beentheretheme_btn_radio_holo_light</item>
+  </style>
+
+  <style name="ButtonBeenThereTheme" parent="android:Widget.Button">
+	  <item name="android:background">@drawable/beentheretheme_btn_default_holo_light</item>
+	  <item name="android:minHeight">48dip</item>
+	  <item name="android:minWidth">64dip</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="ImageButtonBeenThereTheme" parent="android:Widget.ImageButton">
+	  <item name="android:background">@drawable/beentheretheme_btn_default_holo_light</item>
+  </style>
+
+  <style name="SpinnerBeenThereTheme" parent="android:Widget.Spinner">
+      <item name="android:background">@drawable/beentheretheme_spinner_background_holo_light</item>
+      <item name="android:dropDownSelector">@drawable/beentheretheme_list_selector_holo_light</item>
+  </style>
+
+  <style name="SpinnerDropDownItemBeenThereTheme" parent="android:Widget.DropDownItem.Spinner">
+      <item name="android:checkMark">@drawable/beentheretheme_btn_radio_holo_light</item>
+  </style>
+  <style name="TabBeenThereTheme">
+      <item name="android:gravity">center_horizontal</item>
+      <item name="android:paddingLeft">16dip</item>
+      <item name="android:paddingRight">16dip</item>
+      <item name="android:background">@drawable/beentheretheme_tab_indicator_holo</item>
+      <item name="android:layout_width">0dip</item>
+      <item name="android:layout_weight">1</item>
+      <item name="android:minWidth">80dip</item>
+  </style>
+
+  <style name="TabTextBeenThereTheme">
+	  <item name="android:textColor">#000000</item>
+      <item name="android:textSize">12sp</item>
+      <item name="android:textStyle">bold</item>
+      <!-- v14 <item name="android:textAllCaps">true</item> -->
+      <item name="android:ellipsize">marquee</item>
+      <item name="android:maxLines">2</item>
+      <item name="android:maxWidth">180dip</item>
+  </style>
+
+  <style name="ProgressBarBeenThereTheme" parent="android:Widget.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/beentheretheme_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/beentheretheme_progress_indeterminate_horizontal_holo_light</item>
+      <item name="android:minHeight">16dip</item>
+      <item name="android:maxHeight">16dip</item>
+  </style>
+
+  <style name="SeekBarBeenThereTheme" parent="android:Widget.SeekBar">
+      <item name="android:progressDrawable">@drawable/beentheretheme_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/beentheretheme_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:minHeight">13dip</item>
+      <item name="android:maxHeight">13dip</item>
+      <item name="android:thumb">@drawable/beentheretheme_scrubber_control_selector_holo_light</item>
+      <item name="android:thumbOffset">16dip</item>
+      <item name="android:paddingLeft">16dip</item>
+      <item name="android:paddingRight">16dip</item>
+  </style>
+
+  <style name="RatingBarBeenThereTheme" parent="android:Widget.RatingBar">
+      <item name="android:progressDrawable">@drawable/beentheretheme_ratingbar_full_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/beentheretheme_ratingbar_full_holo_light</item>
+  </style>
+
+  <style name="RatingBarBigBeenThereTheme" parent="android:Widget.RatingBar">
+      <item name="android:progressDrawable">@drawable/beentheretheme_ratingbar_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/beentheretheme_ratingbar_holo_light</item>
+      <item name="android:minHeight">35dip</item>
+      <item name="android:maxHeight">35dip</item>
+  </style>
+
+  <style name="RatingBarSmallBeenThereTheme" parent="android:Widget.RatingBar">
+      <item name="android:progressDrawable">@drawable/beentheretheme_ratingbar_small_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/beentheretheme_ratingbar_small_holo_light</item>
+      <item name="android:minHeight">16dip</item>
+      <item name="android:maxHeight">16dip</item>
+  </style>
+
+  <style name="ToggleBeenThereTheme" parent="android:Widget.Button.Toggle">
+      <item name="android:background">@drawable/beentheretheme_btn_toggle_holo_light</item>
+      <item name="android:minHeight">48dip</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="ListViewBeenThereTheme" parent="android:Widget.ListView">
+      <item name="android:listSelector">@drawable/beentheretheme_list_selector_holo_light</item>
+  </style>
+
+  <style name="ListViewBeenThereTheme.White" parent="android:Widget.ListView.White">
+      <item name="android:listSelector">@drawable/beentheretheme_list_selector_holo_light</item>
+  </style>
+
+  <style name="SpinnerItemBeenThereTheme" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+      <item name="android:textColor">#000000</item>
+  </style>
+
+</resources>

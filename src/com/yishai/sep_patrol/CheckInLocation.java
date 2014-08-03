@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -37,8 +38,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 
 //import com.google.
@@ -51,7 +54,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	
 	
 	TextView commentsTV;
-	Button launchQrBtn;
+	Button scanBtn;
 	Button submitBtn;
 	
 	
@@ -73,18 +76,17 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		TextView descriptionView = (TextView)findViewById(R.id.descView);
 		descriptionView.setText("Hello, "+userName);
 		
-		commentsTV = (TextView)findViewById(R.id.CommentsTB);
+		commentsTV = (TextView)findViewById(R.id.commentsTB);
 
 		//Get user details, either from an existing file, or from registration process (which creates the file)
 		manageUserData();
 
-		launchQrBtn = (Button)findViewById(R.id.scnButton);
-		launchQrBtn.setOnClickListener(new launchQrListener());
+		scanBtn = (Button)findViewById(R.id.scnButton);
+		scanBtn.setOnClickListener(new launchQrListener());
 		
 		
-		submitBtn = (Button)findViewById(R.id.SubmitButton);
-		//submitBtn.setVisibility(Button.INVISIBLE);
-		submitBtn.setOnClickListener(new tempListener());
+		submitBtn = (Button)findViewById(R.id.submitBtn);
+		submitBtn.setOnClickListener(new submitListener());
 		
 		commentsTV.setVisibility(TextView.INVISIBLE);
 		
@@ -119,7 +121,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			TextView descriptionView = (TextView)findViewById(R.id.descView);
 			descriptionView.setText("Hello "+userName);
 		}
-		//changeButtonVisibility();
+		changeButtonVisibility();
 	}
 	
 	@Override
@@ -144,13 +146,15 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	private class launchQrListener implements OnClickListener{
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(CheckInLocation.this,"Launching QR scanner", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(CheckInLocation.this,"Launching QR scanner", Toast.LENGTH_SHORT).show();
+				ProgressBar pb = (ProgressBar)findViewById(R.id.mainProgressBar);
+				pb.setVisibility(ProgressBar.VISIBLE);
 				Intent qrIntent = new Intent(getApplicationContext(),CaptureActivity.class);
 				qrIntent.setAction("com.google.zxing.client.android.SCAN");
 				qrIntent.putExtra("SAVE_HISTORY",false);
 				startActivityForResult(qrIntent, 2);
-				launchQrBtn.setText("Please wait");
-				launchQrBtn.setEnabled(false);
+				scanBtn.setText("Please wait");
+				scanBtn.setEnabled(false);
 			}
 	}
 	
@@ -333,12 +337,12 @@ private class tempListener implements OnClickListener{
 		if(locationCode!=null && !"".equals(locationCode)){
 			submitBtn.setVisibility(Button.VISIBLE);
 			commentsTV.setVisibility(TextView.VISIBLE);
-			launchQrBtn.setVisibility(Button.INVISIBLE);
+			scanBtn.setVisibility(Button.INVISIBLE);
 		}
 		else{
 			submitBtn.setVisibility(Button.INVISIBLE);
 			commentsTV.setVisibility(TextView.INVISIBLE);
-			launchQrBtn.setVisibility(Button.VISIBLE);
+			scanBtn.setVisibility(Button.VISIBLE);
 		}
 	}
 	

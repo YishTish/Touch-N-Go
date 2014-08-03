@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/apptheme_btn_toggle_on_disabled_holo_light"
     tools:context="${packageName}.${activityClass}" >
 
     <LinearLayout
@@ -21,22 +22,10 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/scnButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/formLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="98dp"
-        android:minHeight="100dip"
-        android:minWidth="150dip"
-        android:text="@string/scnBtnTxt" />
-
     <RelativeLayout
         android:id="@+id/commentsRow"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/SubmitButton"
         android:layout_centerHorizontal="true"
         android:layout_weight="1"
         android:background="@drawable/apptheme_btn_default_disabled_holo_light"
@@ -64,13 +53,58 @@
         android:text="@string/ScreenDescription" />
 
     <Button
-        android:id="@+id/SubmitButton"
+        android:id="@+id/scnButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/scnButton"
+        android:layout_below="@+id/mainProgressBar"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="@string/CheckIN" />
+        android:layout_marginTop="47dp"
+        android:background="@drawable/beentheretheme_switch_thumb_pressed_holo_light"
+        android:minHeight="100dip"
+        android:minWidth="150dip"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="@string/scnBtnTxt"
+        android:textColor="#994221"
+        android:textSize="@dimen/ButtonTextHeight" />
 
-   
+    <ProgressBar
+        android:id="@+id/mainProgressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/descView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp" />
+
+    <Button
+        android:id="@+id/submitBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/scnButton"
+        android:layout_alignBottom="@+id/scnButton"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/beentheretheme_switch_thumb_pressed_holo_light"
+        android:minHeight="100dip"
+        android:minWidth="150dip"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="@string/submitBtnTxt"
+        android:textColor="#994221"
+        android:textSize="@dimen/ButtonTextHeight" />
+
+    <EditText
+        android:id="@+id/commentsTB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/mainProgressBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="19dp"
+        android:background="@drawable/beentheretheme_spinner_default_holo_light"
+        android:ems="10"
+        android:inputType="textMultiLine" >
+
+        <requestFocus />
+    </EditText>
+
 </RelativeLayout>
