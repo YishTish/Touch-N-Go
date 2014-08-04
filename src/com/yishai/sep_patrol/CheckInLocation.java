@@ -24,7 +24,8 @@ import org.json.JSONObject;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.zxing.client.android.CaptureActivity;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -38,7 +39,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +58,8 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	TextView commentsTV;
 	Button launchQrBtn;
 	Button submitBtn;
+
+    ProgressBar pb;
 	
 	
 	String userName="";
@@ -90,26 +95,22 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		//submitBtn.setVisibility(Button.INVISIBLE);
 		submitBtn.setOnClickListener(new submitListener());
 
-		//commentsTV.setVisibility(TextView.INVISIBLE);
+        pb = (ProgressBar)findViewById(R.id.mainProgressBar);
+		commentsTV.setVisibility(TextView.INVISIBLE);
 	}
 	
 	private void loadSavedVariables(Bundle savedInstance){
 		if(savedInstance==null)
 			return;
-		Log.e("loading saved variables","Starting load");
 		String userName = savedInstance.getString("userName");
-		Log.e("loading saved variables","received username");
 		if(userName!=null && !"".equals(userName))
 			this.userName = userName;
-		Log.e("loading saved variables","loaded username");
 		String locationCode = savedInstance.getString("locationCode");
 		if(locationCode!=null && !"".equals(locationCode))
 			this.locationCode = locationCode;
-		Log.e("loading saved variables","loaded locationCode");
 		String comments = savedInstance.getString("comments");
 		if(comments!=null && !"".equals(comments))
 			this.comments = comments;
-		Log.e("loading saved variables","loaded comments");
 	}
 	
 	@Override
@@ -129,8 +130,14 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	private class launchQrListener implements OnClickListener{
 			@Override
 			public void onClick(View v) {
-				
-				
+
+
+                IntentIntegrator integrator = new IntentIntegrator(CheckInLocation.this);
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+                integrator.setPrompt("Scan the code");
+                integrator.initiateScan();
+
+				/*
 				Toast.makeText(CheckInLocation.this,"Launching QR scanner", Toast.LENGTH_SHORT).show();
 				Intent qrIntent = new Intent(getApplicationContext(),CaptureActivity.class);
 				qrIntent.setAction("com.google.zxing.client.android.SCAN");
@@ -138,7 +145,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 				startActivityForResult(qrIntent, 2);
 			//	launchQrBtn.setText("Please wait");
 				launchQrBtn.setEnabled(false);
-				
+				*/
 			}
 			
 			
@@ -260,7 +267,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		commentsTV.setText("");
 		comments = locationCode = "";
 		try{
-			int responseCode = (int)response.get("code");
+			int responseCode = (Integer)response.get("code");
 			String responseText = (String)response.get("text");
 			if(responseCode == 200){
 				Toast.makeText(getApplicationContext(), responseText, Toast.LENGTH_LONG).show();
@@ -310,11 +317,16 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			Log.i("External activity returned","Returned from getting auth token");
 			getTokenInAsyncTask(account);
 		}
-		else if(requestCode==SCAN_ACTIVITY){
-			Log.i("External activity returned","Returned from getting auth token");
-			String qrCode = data.getStringExtra("SCAN_RESULT");
-			locationCode = qrCode;
-			Toast.makeText(CheckInLocation.this, qrCode, Toast.LENGTH_SHORT).show();
+		else {//if(requestCode==SCAN_ACTIVITY){
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode, data);
+            if(result != null){
+                locationCode = result.getContents();
+            }
+            else{
+                super.onActivityResult(requestCode,resultCode,data);
+                locationCode = "";
+            }
+            Toast.makeText(CheckInLocation.this, "Request Code: "+requestCode, Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -329,6 +341,9 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	}
 	
 	private void changeButtonVisibility(){
+        pb.setVisibility(View.INVISIBLE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
 		if(locationCode!=null && !"".equals(locationCode)){
 			submitBtn.setVisibility(Button.VISIBLE);
 			commentsTV.setVisibility(TextView.VISIBLE);
