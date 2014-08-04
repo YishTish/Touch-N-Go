@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="BeenThereTheme" parent="@style/_BeenThereTheme"/>
+
+  <style name="_BeenThereTheme" parent="Theme.AppCompat.Light">
+
+    <item name="android:editTextStyle">@style/EditTextBeenThereTheme</item>
+
+    <item name="android:textColorHighlight">#9987979e</item>
+
+    <item name="android:checkboxStyle">@style/CheckBoxBeenThereTheme</item>
+
+    <item name="android:radioButtonStyle">@style/RadioButtonBeenThereTheme</item>
+
+    <item name="android:buttonStyle">@style/ButtonBeenThereTheme</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonBeenThereTheme</item>
+
+    <item name="android:spinnerStyle">@style/SpinnerBeenThereTheme</item>
+
+    <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemBeenThereTheme</item>
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarBeenThereTheme</item>
+
+    <item name="android:seekBarStyle">@style/SeekBarBeenThereTheme</item>
+
+    <item name="android:ratingBarStyle">@style/RatingBarBeenThereTheme</item>
+
+    <item name="android:ratingBarStyleIndicator">@style/RatingBarBigBeenThereTheme</item>
+
+    <item name="android:ratingBarStyleSmall">@style/RatingBarSmallBeenThereTheme</item>
+
+    <item name="android:buttonStyleToggle">@style/ToggleBeenThereTheme</item>
+
+    <item name="android:listViewStyle">@style/ListViewBeenThereTheme</item>
+
+    <item name="android:listViewWhiteStyle">@style/ListViewBeenThereTheme.White</item>
+
+    <item name="android:spinnerItemStyle">@style/SpinnerItemBeenThereTheme</item>
+
+  </style>
+
+</resources>
