@@ -1,84 +1,95 @@
 package com.yishai.sep_patrol;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class ProcessCheckIn extends AsyncTask<String, Void, String> {
+public class ProcessCheckIn extends AsyncTask<String, Void, JSONObject> {
 	
 		
 		HandleAsyncResponse delegate = null;
-		List<String> params;
+		JSONObject json = new JSONObject();
 		
 		public void setDelegate(HandleAsyncResponse delegate) {
 			this.delegate = delegate;
 		}
 		
-		public ProcessCheckIn(List<String> params) {
-			this.params = params;
-		}
-
-		private List<NameValuePair> collectParams(){
-			List<NameValuePair> list = new ArrayList<NameValuePair>();
-			if(params.get(0)!=null && !"".equals(params.get(0)))
-				list.add(new BasicNameValuePair("Name" ,params.get(0)));
-			if(params.get(1)!=null && !"".equals(params.get(1)))
-				list.add(new BasicNameValuePair("Location" ,params.get(1)));
-			if(params.get(2)!=null && !"".equals(params.get(2)))
-				list.add(new BasicNameValuePair("Comments" ,params.get(2)));
-			if(params.get(3)!=null && !"".equals(params.get(3)))
-				list.add(new BasicNameValuePair("Timestamp" ,params.get(3)));
-			return list;
+		public ProcessCheckIn(JSONObject params) {
+			json = params;
 		}
 		
+	/*
+		private String jsonToString() {
+			
+			String string = json.toString();
+			return string;
+		}
+	*/
 		@Override
-		protected String doInBackground(String... params) {
+		protected JSONObject doInBackground(String... params) {
+			
 			HttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(Constants.GSHEET_URL);
 			
-			String serverResponse="";
-			List<NameValuePair> args =  collectParams();
+			JSONObject serverResponse=new JSONObject();
 			
-			try {
-				post.setEntity(new UrlEncodedFormEntity(args));
-				HttpResponse response = client.execute(post);
-				int responseCode = response.getStatusLine().getStatusCode();
-				if(responseCode==200)
-					serverResponse = "Check-in Succeed";
-				else
-					serverResponse = "Check-in failure. Server response code: "+responseCode;
-			} catch (ClientProtocolException e) {
-				Log.e("Client Error","Client protocol error: "+ e.getMessage());
-				serverResponse = "Check-in failure, clientProtocol error";
-			} catch (IOException e) {
-				Log.e("IO Error","IO error: "+ e.getMessage());
-				serverResponse = "Check-in failure. Input/Output error";
-			}
-			catch (Exception e) {
-				Log.e("Error", "General error: "+ e.getMessage());
-				e.printStackTrace();
-				serverResponse = "Check-in failure";
-			}
 			
+			try{
+				try {
+					Log.e("Sending checkin","json = "+json.toString());
+					post.setEntity(new StringEntity(json.toString()));
+					post.setHeader("Accept","application/json");
+					post.setHeader("Content-type","application/json");
+					HttpResponse response = client.execute(post);
+					int responseCode = response.getStatusLine().getStatusCode();
+					serverResponse.put("code", responseCode);
+					if(responseCode==200){
+						InputStream input = response.getEntity().getContent();
+						InputStreamReader incoming = new InputStreamReader(input);
+						BufferedReader reader = new BufferedReader(incoming);
+						StringBuilder strB = new StringBuilder();
+						String line;
+						while((line = reader.readLine()) != null){
+							strB.append(line);
+						}
+						serverResponse.put("text",  strB.toString());
+					}
+					else
+						serverResponse.put("text", "Check-in failure.");
+				} catch (ClientProtocolException e) {
+					Log.e("Client Error","Client protocol error: "+ e.getMessage());
+					serverResponse.put("text","Check-in failure, clientProtocol error");
+				} catch (IOException e) {
+					Log.e("IO Error","IO error: "+ e.getMessage());
+					serverResponse.put("text","Check-in failure. Input/Output error");
+				}
+				catch (Exception e) {
+					Log.e("Error", "General error: "+ e.getMessage());
+					serverResponse.put("text","Check-in failure - General exception");
+				}
+			}
+			catch (JSONException je){
+				Log.e("JSON Error", je.getMessage());
+			}
 			return serverResponse;
 		}
 		
 		@Override
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(JSONObject result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
+		
 		delegate.processFinish(result);
 		}
 }
