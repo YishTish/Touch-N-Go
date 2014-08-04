@@ -9,13 +9,16 @@ import java.util.ArrayList;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.util.Log;
 
 public class TestOAuth extends ProcessCheckIn{
 
 	
 	public TestOAuth() {
-		super(new ArrayList<String>());
+		super(new JSONObject());
 		token = "";
 	}
 
@@ -27,7 +30,7 @@ public class TestOAuth extends ProcessCheckIn{
 	}
 	
 	@Override
-	protected String doInBackground(String... params) {
+	protected JSONObject doInBackground(String... params) {
 		HttpClient client = new DefaultHttpClient();
 		//HttpGet get = new HttpGet(Constants.TEMP_GSHEET);
 		//HttpParams getParams = new BasicHttpParams();
@@ -36,11 +39,12 @@ public class TestOAuth extends ProcessCheckIn{
 		//get.setParams(getParams);
 		//Log.e(LOGTAG,get.getRequestLine().getUri());
 		String serverResponse="";
+		int responseCode = 0;
 		try {
 			 URL url = new URL(Constants.TEMP_GSHEET +"?access_token="+ token);
 			 HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			InputStream is = con.getInputStream();
-			int responseCode = con.getResponseCode();
+			 responseCode = con.getResponseCode();
 			//HttpResponse response = client.execute(get);
 			//int responseCode = response.getStatusLine().getStatusCode();
 			if(responseCode==200){
@@ -91,7 +95,13 @@ public class TestOAuth extends ProcessCheckIn{
 			e.printStackTrace();
 			serverResponse = "Check-in failure";
 		}
-		return serverResponse;
+		try{
+			return new JSONObject().put("code", 200).put("text",serverResponse);
+		}
+		catch(JSONException je){
+			Log.e(LOGTAG, je.getMessage());
+			return null;
+		}
 	}
 	
 }
