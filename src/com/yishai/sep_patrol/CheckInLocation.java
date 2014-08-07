@@ -32,6 +32,7 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -40,14 +41,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-//import com.google.
-//import com.google.zxing
 
 public class CheckInLocation extends Activity implements HandleAsyncResponse {
 
@@ -65,8 +64,9 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	String userName="";
 	String locationCode ="";
 	String comments = "";
-	
-	String token;
+
+    LocationController locController;
+    String token;
 	
 	
 	@Override
@@ -79,7 +79,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		TextView descriptionView = (TextView)findViewById(R.id.descView);
 		descriptionView.setText("Hello, "+userName);
 		
-		commentsTV = (TextView)findViewById(R.id.CommentsTB);
+		commentsTV = (TextView)findViewById(R.id.commentsTB);
 
 		//Get user details, either from an existing file, or from registration process (which creates the file)
 		manageUserData();
@@ -96,7 +96,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		submitBtn.setOnClickListener(new submitListener());
 
         pb = (ProgressBar)findViewById(R.id.mainProgressBar);
-		commentsTV.setVisibility(TextView.INVISIBLE);
+		//commentsTV.setVisibility(TextView.INVISIBLE);
 	}
 	
 	private void loadSavedVariables(Bundle savedInstance){
@@ -122,6 +122,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			descriptionView.setText("Hello "+userName);
 		}
 		changeButtonVisibility();
+        locController = new LocationController((LocationManager)getSystemService(Context.LOCATION_SERVICE));
 	}
 	
 	
@@ -132,6 +133,8 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			public void onClick(View v) {
 
 
+                launchQrBtn.setText("Please wait...");
+                launchQrBtn.setEnabled(false);
                 IntentIntegrator integrator = new IntentIntegrator(CheckInLocation.this);
                 integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
                 integrator.setPrompt("Scan the code");
@@ -173,8 +176,15 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			ProcessCheckIn task = new ProcessCheckIn(params);
 			task.setDelegate(CheckInLocation.this);
 			task.execute(); */
-			
-			
+
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+            //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            submitBtn.setEnabled(false);
+			submitBtn.setText("Please wait...");
 			checkIn(CheckInLocation.this);
 		}
 	}
@@ -401,6 +411,8 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 				json.put(Constants.LOCATION_TXT, locationCode);
 				json.put(Constants.COMMENTS_TXT,commentsTV.getText().toString());
 				json.put(Constants.TIMESTAMP_TXT,Long.toString(currentTS));
+                json.put("Longitude",locController.getLongitude());
+                json.put("Latitude", locController.getLatitude());
 		} catch (JSONException e) {
 			Log.e("creating checkin json", e.getMessage());
 			

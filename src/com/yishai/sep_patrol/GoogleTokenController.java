@@ -47,7 +47,7 @@ public class GoogleTokenController {
 				getAccountName();
 			}
 			
-			
+			//accountName = "yishai@simba-web.co.il";
 			
 			AsyncTask<String,Void, String> task = new AsyncTask<String, Void, String>() {
 

@@ -30,12 +30,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
+      <!--  <activity
             android:name="com.google.zxing.client.android.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden" /> -->
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -45,10 +45,10 @@
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register" >
         </activity>
-        <activity
+        <!--<activity
             android:name=".Sandbox"
             android:label="@string/title_activity_sandbox" >
-        </activity>
+        </activity> -->
     </application>
 
 </manifest>
