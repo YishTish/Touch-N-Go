@@ -10,6 +10,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.UnsupportedCharsetException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -115,7 +117,8 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
+        token = new GoogleTokenController(this).getToken();
+        // TODO Auto-generated method stub
 		super.onResume();
 		if(null != this.userName && !"".equals(userName)){
 			TextView descriptionView = (TextView)findViewById(R.id.descView);
@@ -347,6 +350,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		outState.putString("userName", this.userName);
 		outState.putString("locationCode", this.locationCode);
 		outState.putString("comments", commentsTV.getText().toString());
+        //outState.putString("token", commentsTV.getText().toString());
 		
 	}
 	
@@ -394,7 +398,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		if(checkInData != null){
 			ProcessCheckIn task = new ProcessCheckIn(checkInData);
 			task.setDelegate(handler);
-			task.execute();
+			task.execute(token);
 		}
 		else{
 			Log.e("Checking in data", "No data in file to send");
@@ -406,18 +410,18 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	private JSONObject collectParams () {
 		long currentTS = System.currentTimeMillis()/1000;
 		JSONObject json = new JSONObject();
-		try {
+        try {
 				json.put(Constants.NAME_TXT, this.userName);
 				json.put(Constants.LOCATION_TXT, locationCode);
-				json.put(Constants.COMMENTS_TXT,commentsTV.getText().toString());
+				json.put(Constants.COMMENTS_TXT, commentsTV.getText().toString());
 				json.put(Constants.TIMESTAMP_TXT,Long.toString(currentTS));
                 json.put("Longitude",locController.getLongitude());
                 json.put("Latitude", locController.getLatitude());
 		} catch (JSONException e) {
 			Log.e("creating checkin json", e.getMessage());
-			
+
 		}
-	
+
 		return json;
 	}
 	
