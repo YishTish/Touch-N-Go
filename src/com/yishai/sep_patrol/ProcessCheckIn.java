@@ -50,9 +50,9 @@ public class ProcessCheckIn extends AsyncTask<String, Void, JSONObject> {
             }
 
 			HttpClient client = new DefaultHttpClient();
-			HttpPost post = new HttpPost(Constants.GSHEET_URL);
-            //HttpPost post = new HttpPost("https://resplendent-fire-842.firebaseio.com/activities.json");
-           // post.addHeader("Authorization", "Bearer "+token);
+			//HttpPost post = new HttpPost(Constants.GSHEET_URL);
+            HttpPost post = new HttpPost("https://resplendent-fire-842.firebaseio.com/activities.json");
+            post.addHeader("Authorization", "Bearer "+token);
             //Header header = post.addHeader(new HttpH);
 			
 			JSONObject serverResponse=new JSONObject();

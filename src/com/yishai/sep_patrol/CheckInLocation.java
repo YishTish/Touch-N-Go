@@ -23,9 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -117,7 +114,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	
 	@Override
 	protected void onResume() {
-        token = new GoogleTokenController(this).getToken();
+        //token = new GoogleTokenController(this).getToken();
         // TODO Auto-generated method stub
 		super.onResume();
 		if(null != this.userName && !"".equals(userName)){
@@ -303,6 +300,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	
 	
 	//Currently not in use - needed for handling tokens to communicate with Google
+    /*
 	private String getAccountName() {
 	    AccountManager mAccountManager = AccountManager.get(getApplicationContext());
 	    
@@ -314,10 +312,11 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	   	}
 	    return  accounts[0].name;
 	 }
-	
+	*/
 	//Currently not in use - When retrieving a token from Google, an external intent is 
 	//launched, and this method is activated when that intent is completed
-	@Override
+	/*
+    @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		
@@ -342,7 +341,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
             Toast.makeText(CheckInLocation.this, "Request Code: "+requestCode, Toast.LENGTH_SHORT).show();
 		}
 	}
-	
+	*/
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
@@ -372,6 +371,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 	
 	
 	//Currently not in use - manage security tokens for communicating with Google
+    /*
 	private void getTokenInAsyncTask(String account){
 		AsyncTask<String,Void, Object> task = new AsyncTask<String, Void, Object>() {
 
@@ -386,7 +386,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		}; 
 		task.execute(account);
 	}
-	
+	*/
 	private void checkIn(HandleAsyncResponse handler){
 		
 		/*
@@ -473,6 +473,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		 output
 	 }*/
 
+    /*
 	protected void manageToken(String account) {
 		String scope="oauth2:https://www.googleapis.com/auth/drive.scripts";
 		
@@ -498,7 +499,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 			return;
 		}
 	}
-
+*/
 	
 	private JSONObject getUserRegistration(){
 		BufferedReader br = null;
