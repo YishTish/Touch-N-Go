@@ -1,4 +1,5 @@
-package com.yishai.sep_patrol;
+package com.yishai.touchNgo;
+
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,10 +10,12 @@ public class Sandbox extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+	/*
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sandbox);
+	*/
 	}
-
+/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -20,7 +23,7 @@ public class Sandbox extends ActionBarActivity {
 		return true;
 	}
 
-	@Override
+
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
@@ -29,6 +32,7 @@ public class Sandbox extends ActionBarActivity {
 		if (id == R.id.action_settings) {
 			return true;
 		}
-		return super.onOptionsItemSelected(item);
+		//return super.onOptionsItemSelected(item);
 	}
+*/
 }

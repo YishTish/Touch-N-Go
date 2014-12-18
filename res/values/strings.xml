@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BEEN THERE (done that)</string>
+    <string name="app_name">Touch-N-Go</string>
     <string name="hello_world">Hello world!</string>
     <string name="YourName">Your Name</string>
     <string name="CurrentLocation">Current Location</string>
@@ -10,14 +10,14 @@
     <string name="ScreenDescription">Please type in your name and location. If you have any comments, please add those as well. When done, press the Check-in button</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="firstName">First Name</string>
-    <string name="LastName">Last (Sir) Name</string>
+    <string name="LastName">Last Name</string>
     <string name="email">Email</string>
     <string name="Register">Register</string>
-    <string name="Registration_Title">SEP Patrol Registration</string>
-    <string name="scnBtnTxt">Been There</string>
+    <string name="Registration_Title">One-Time Registration</string>
+    <string name="scnBtnTxt">Scan QrCode</string>
     <string name="title_activity_sandbox">Sandbox</string>
     <string name="action_settings">Settings</string>
     <string name="Settings">Settings</string>
-    <string name="submitBtnTxt">Done That</string>
+    <string name="submitBtnTxt">Confirm</string>
 
 </resources>

@@ -5,7 +5,7 @@
 
   <style name="TestAppTheme" parent="@style/_AppTheme"/>
 
-  <style name="_AppTheme" parent="Theme.AppCompat.Light">
+  <style name="_AppTheme" parent="AppBaseTheme">
 
     <item name="android:editTextStyle">@style/EditTextAppTheme</item>
 

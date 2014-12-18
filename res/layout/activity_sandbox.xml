@@ -6,7 +6,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.yishai.sep_patrol.Sandbox"
+    tools:context="com.yishai.touchNgo.Sandbox"
     android:layout_marginLeft="0dp"
     >
 
@@ -28,7 +28,7 @@
         android:layout_below="@+id/commentsTB"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/abc_ab_solid_light_holo"
+        android:src="@drawable/apptheme_btn_toggle_holo_light"
         android:layout_marginLeft="0dp"/>
 
 </RelativeLayout>

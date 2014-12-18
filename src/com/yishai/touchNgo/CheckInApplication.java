@@ -1,4 +1,4 @@
-package com.yishai.sep_patrol;
+package com.yishai.touchNgo;
 
 import android.app.Application;
 

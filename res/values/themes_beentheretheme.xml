@@ -5,7 +5,7 @@
 
   <style name="BeenThereTheme" parent="@style/_BeenThereTheme"/>
 
-  <style name="_BeenThereTheme" parent="Theme.AppCompat.Light">
+  <style name="_BeenThereTheme" parent="ListViewAppTheme.White">
 
     <item name="android:editTextStyle">@style/EditTextBeenThereTheme</item>
 

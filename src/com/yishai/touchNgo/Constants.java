@@ -1,4 +1,4 @@
-package com.yishai.sep_patrol;
+package com.yishai.touchNgo;
 
 public class Constants {
 	

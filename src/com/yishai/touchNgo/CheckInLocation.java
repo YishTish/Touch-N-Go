@@ -1,17 +1,14 @@
-package com.yishai.sep_patrol;
+package com.yishai.touchNgo;
 
 
 
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.UnsupportedCharsetException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;

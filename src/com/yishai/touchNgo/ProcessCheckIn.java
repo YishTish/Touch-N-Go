@@ -1,4 +1,4 @@
-package com.yishai.sep_patrol;
+package com.yishai.touchNgo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
@@ -50,10 +51,10 @@ public class ProcessCheckIn extends AsyncTask<String, Void, JSONObject> {
             }
 
 			HttpClient client = new DefaultHttpClient();
-			HttpPost post = new HttpPost(Constants.GSHEET_URL);
-            //HttpPost post = new HttpPost("https://resplendent-fire-842.firebaseio.com/activities.json");
-           // post.addHeader("Authorization", "Bearer "+token);
-            //Header header = post.addHeader(new HttpH);
+			//HttpPost post = new HttpPost(Constants.GSHEET_URL);
+            HttpPost post = new HttpPost("https://resplendent-fire-842.firebaseio.com/activities.json");
+            post.addHeader("Authorization", "Bearer "+token);
+            //Header header = post.addHeader(new HttpHead());
 			
 			JSONObject serverResponse=new JSONObject();
 			
