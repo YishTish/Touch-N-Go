@@ -34,13 +34,13 @@
             android:name="com.google.zxing.client.android.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden" /> -->
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
- -->
+
         <activity
             android:name="com.yishai.touchNgo.RegisterActivity"
             android:label="@string/title_activity_register" >

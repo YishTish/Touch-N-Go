@@ -1,0 +1,8 @@
+/build
+/.idea
+/.gradle
+/.settings
+/bin
+/gen
+Touch-N-Go.iml
+local.properties
