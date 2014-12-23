@@ -346,6 +346,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 		if(locationCode!=null && !"".equals(locationCode)){
 			submitBtn.setVisibility(Button.VISIBLE);
 			commentsTV.setVisibility(TextView.VISIBLE);
+			launchQrBtn.setText(R.string.scnBtnTxt);
 			launchQrBtn.setVisibility(Button.INVISIBLE);
 		}
 		else{
@@ -403,6 +404,7 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 				json.put(Constants.TIMESTAMP_TXT,Long.toString(currentTS));
                 json.put("Longitude",locController.getLongitude());
                 json.put("Latitude", locController.getLatitude());
+                json.put(Constants.ACTIVITY_TXT, Constants.CHECK_IN_ACTIVITY);
 		} catch (JSONException e) {
 			Log.e("creating checkin json", e.getMessage());
 

@@ -10,4 +10,6 @@ public class Constants {
 	public static final String NAME_TXT = "Name";
 	public static final String LOCATION_TXT = "Location";
 	public static final String COMMENTS_TXT = "Comments";
+	public static final String ACTIVITY_TXT = "Activity";
+	public static final String CHECK_IN_ACTIVITY = "Check-in";
 }
