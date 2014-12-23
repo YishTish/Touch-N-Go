@@ -427,14 +427,14 @@ public class CheckInLocation extends Activity implements HandleAsyncResponse {
 
 				JSONObject fileData = new JSONObject(sb.toString());
 				Log.e("check-in process","file content: "+fileData.toString());
-				dataArray = (JSONArray)fileData.get("data");
+				dataArray = (JSONArray)fileData.get("check-in");
 			}
 			catch(FileNotFoundException fnfe){
 				dataArray = new JSONArray();
 			}
 			dataArray.put(data);
 			jsonObject = new JSONObject();
-			jsonObject.put("data",dataArray);
+			jsonObject.put("check-in",dataArray);
 			
 			FileOutputStream fos = openFileOutput(Constants.CHECKIN_DATA_FILE, Context.MODE_PRIVATE);
 			byte[] jsonContent = jsonObject.toString().getBytes();
