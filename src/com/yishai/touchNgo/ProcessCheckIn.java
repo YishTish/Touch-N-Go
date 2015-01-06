@@ -1,27 +1,23 @@
 package com.yishai.touchNgo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import android.os.AsyncTask;
+import android.util.Log;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.webkit.WebViewClient;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class ProcessCheckIn extends AsyncTask<String, Void, JSONObject> {
 	
@@ -36,14 +32,7 @@ public class ProcessCheckIn extends AsyncTask<String, Void, JSONObject> {
 		public ProcessCheckIn(JSONObject params) {
 			json = params;
 		}
-		
-	/*
-		private String jsonToString() {
-			
-			String string = json.toString();
-			return string;
-		}
-	*/
+
 		@Override
 		protected JSONObject doInBackground(String... params) {
 
