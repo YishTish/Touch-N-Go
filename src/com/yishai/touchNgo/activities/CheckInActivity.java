@@ -9,34 +9,28 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.yishai.touchNgo.AsyncResponseHandler;
 import com.yishai.touchNgo.Constants;
-import com.yishai.touchNgo.HandleAsyncResponse;
 import com.yishai.touchNgo.LocationController;
-import com.yishai.touchNgo.PostToFirebase;
 import com.yishai.touchNgo.ProcessCheckIn;
 import com.yishai.touchNgo.R;
+import com.yishai.touchNgo.model.CheckIn;
 import com.yishai.touchNgo.model.User;
+import com.yishai.touchNgo.services.FirebaseService;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,96 +44,93 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class CheckInActivity extends Activity implements HandleAsyncResponse {
-
-    private final int GOOGLE_ACTIVITY = 1;
+public class CheckInActivity extends Activity implements AsyncResponseHandler {
 
 
     TextView commentsTV;
     Button launchQrBtn;
     Button submitBtn;
+    TextView descriptionView;
 
     ProgressBar pb;
 
 
-    String userName = "";
+    User user;
+    CheckIn checkIn;
     String locationCode = "";
     String comments = "";
+
+    public static final String LOGCAT = "Check-in CheckIn";
 
     private LocationController locController;
     private String token;
 
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-
-        loadSavedVariables(savedInstanceState);
+        sharedPreferences = getSharedPreferences("com.yishai.touchNgo.prefs", MODE_PRIVATE);
         setContentView(R.layout.activity_main);
 
-        TextView descriptionView = (TextView) findViewById(R.id.descView);
-        descriptionView.setText("Hello, " + userName);
-
         commentsTV = (TextView) findViewById(R.id.commentsTB);
-
-        //Get user details, either from an existing file, or from registration process (which creates the file)
-        manageUserData();
-
+        descriptionView = (TextView) findViewById(R.id.descView);
 
         launchQrBtn = (Button) findViewById(R.id.scnButton);
         launchQrBtn.setOnClickListener(new launchQrListener());
-
 
         submitBtn = (Button) findViewById(R.id.submitBtn);
         submitBtn.setOnClickListener(new submitListener());
 
         pb = (ProgressBar) findViewById(R.id.mainProgressBar);
+    }
 
-        Intent intent = getIntent();
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //Collect saved variables
+        comments = sharedPreferences.getString("comments","");
+        locationCode = sharedPreferences.getString("locationCode","");
+        String userString = sharedPreferences.getString("user","");
+        if(!"".equals(userString)){
+            try {
+                JSONObject userJson = new JSONObject(userString);
+                this.user = new User(userJson);
+            }
+            catch(JSONException je){
+                Log.e("CheckinActivity", "Failed to get User object from file: " + je.getMessage());
+            }
+        }
+
+        //if loading saved params failed, or there are no saved params
+        if(user==null){
+            Intent registrationIntent = new Intent(this, RegisterActivity.class);
+            startActivity(registrationIntent);
+            return;
+        }
+        //Get user details, either from an existing file, or from registration process (which creates the file)
+        //getUserData();
+        descriptionView.setText("Hello, " + user.getName());
+
+        //Toggle between Scan and submit buttons
+        changeButtonVisibility();
+        //Start the location controller service
+        locController = new LocationController((LocationManager) getSystemService(Context.LOCATION_SERVICE));
 
         //We might arrive at this app via a direct link. In that case, no need to launch the QR reader, just confirm and send
+        Intent intent = getIntent();
         if (intent.ACTION_VIEW.equals(intent.getAction())) {
             Uri uri = intent.getData();
-            String code = uri.getQueryParameter("locationCode");
-            locationCode = code;
-            Toast.makeText(getApplicationContext(), "Code received: " + code, Toast.LENGTH_LONG).show();
+            locationCode = uri.getQueryParameter("locationCode");;
+            Toast.makeText(getApplicationContext(), "Code received: " + locationCode, Toast.LENGTH_LONG).show();
 
             changeButtonVisibility();
         }
 
-
-    }
-
-    private void loadSavedVariables(Bundle savedInstance) {
-        if (savedInstance == null)
-            return;
-        String userName = savedInstance.getString("userName");
-        if (userName != null && !"".equals(userName))
-            this.userName = userName;
-        String locationCode = savedInstance.getString("locationCode");
-        if (locationCode != null && !"".equals(locationCode))
-            this.locationCode = locationCode;
-        String comments = savedInstance.getString("comments");
-        if (comments != null && !"".equals(comments))
-            this.comments = comments;
-    }
-
-    @Override
-    protected void onResume() {
-        //token = new GoogleTokenController(this).getToken();
-        // TODO Auto-generated method stub
-        super.onResume();
-
-
-        if (null != this.userName && !"".equals(userName)) {
-            TextView descriptionView = (TextView) findViewById(R.id.descView);
-            descriptionView.setText("Hello " + userName);
-        }
-        changeButtonVisibility();
-        locController = new LocationController((LocationManager) getSystemService(Context.LOCATION_SERVICE));
     }
 
 
@@ -163,25 +154,6 @@ public class CheckInActivity extends Activity implements HandleAsyncResponse {
 
         @Override
         public void onClick(View v) {
-            //	String accountName = getAccountName();
-            //@TODO: Get time from network, and if fails get from device and add comment
-            //long currentTS = System.currentTimeMillis()/1000;
-		/*	long currentTS = getTimeStamp();
-			Log.i("Checking in","currentTS = "+currentTS);
-			submitBtn.setText("sending check-in data...");
-			submitBtn.setEnabled(false);
-			List<String> params = new ArrayList<String>();
-			params.add(CheckInActivity.this.userName);
-			params.add(locationCode);
-			params.add(commentsTV.getText().toString());
-			params.add(Long.toString(currentTS));
-			
-			//@TODO: Save parameters to json document
-			//@TODO: Send json document instead of raw variables
-			ProcessCheckIn task = new ProcessCheckIn(params);
-			task.setDelegate(CheckInActivity.this);
-			task.execute(); */
-
             InputMethodManager inputManager = (InputMethodManager)
                     getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -190,10 +162,12 @@ public class CheckInActivity extends Activity implements HandleAsyncResponse {
             //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             submitBtn.setEnabled(false);
             submitBtn.setText("Please wait...");
-            checkIn(CheckInActivity.this);
+            //checkIn(CheckInActivity.this);
+            checkIn();
         }
     }
 
+   /*
     private boolean haveNetworkConnection() {
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
@@ -253,33 +227,45 @@ public class CheckInActivity extends Activity implements HandleAsyncResponse {
             return (-System.currentTimeMillis());
         }
     }
-
-    private void manageUserData() {
-        JSONObject userData = getUserRegistration();
-        if (userData == null) {
-            Intent registrationIntent = new Intent(CheckInActivity.this, RegisterActivity.class);
-            startActivity(registrationIntent);
-        } else {
-            try {
-                userName = userData.getString("first_name") + " " + userData.getString("last_name");
-            } catch (JSONException e) {
-                // TODO Auto-generated catch block
-                Log.e("Fetching user data", "Couldn't read user data: " + e.getMessage());
-            }
-        }
-
-
-    }
-
+    */
 
     //Code to run when Handling the response from the check-in Async process.
     @Override
     public void processFinish(JSONObject response) {
 
+        try{
+            if(response.has("status")){
+                String status = response.getString("status");
+                switch(status){
+                    case "success":
+                        if(response.has("key")){
+                            String key = response.getString("key");
+                            Log.i(LOGCAT, "Check-in activity successful. Activity code: "+key);
+                            //checkIn.setKey(key);
+                        }
+                        break;
+                    case "failure":
+                        String reason;
+                        if(response.has("reason")){
+                             reason = response.getString("reason");
+                        }
+                        else{
+                            reason = "Unknown reason";
+                        }
+                        Toast.makeText(this, "Check-in failure: "+reason,Toast.LENGTH_LONG).show();
+                        Log.e(LOGCAT, "Failed to check-in. Reason: "+reason);
+                    }
+            }
+        }
+        catch(JSONException je){
+            Log.e(LOGCAT, "Failed to handle check-in response. Reason: "+je.getMessage());
+        }
+
         //Clear the textboxes
         commentsTV.setText("");
         comments = locationCode = "";
-        try {
+        sharedPreferences.edit().remove("locationCode").apply();
+        /*try {
             int responseCode = (Integer) response.get("code");
             String responseText = (String) response.get("text");
             if (responseCode == 200) {
@@ -291,30 +277,15 @@ public class CheckInActivity extends Activity implements HandleAsyncResponse {
             }
         } catch (JSONException je) {
             Log.e("JSON failure", "Failed to read JSON response from checkin");
-        } finally {
+        } finally {*/
+
             changeButtonVisibility();
-        }
+        //}
 
 
     }
 
 
-    //Currently not in use - needed for handling tokens to communicate with Google
-    /*
-	private String getAccountName() {
-	    AccountManager mAccountManager = AccountManager.get(getApplicationContext());
-	    
-	    Account[] accounts = mAccountManager.getAccountsByType(
-	    		GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-	   if(accounts.length == 0){
-		   Toast.makeText(this, "This application requires a Google account. None is associated with your phone",Toast.LENGTH_LONG).show();
-		   return null;
-	   	}
-	    return  accounts[0].name;
-	 }
-	*/
-    //Currently not in use - When retrieving a token from Google, an external intent is
-    //launched, and this method is activated when that intent is completed
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -329,6 +300,7 @@ public class CheckInActivity extends Activity implements HandleAsyncResponse {
 			getTokenInAsyncTask(account);
 		}
 	*/
+        //Returning from QR Reader
         else if (requestCode == IntentIntegrator.REQUEST_CODE) {
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result != null) {
@@ -338,55 +310,49 @@ public class CheckInActivity extends Activity implements HandleAsyncResponse {
                 locationCode = "";
             }
             Toast.makeText(CheckInActivity.this, locationCode, Toast.LENGTH_SHORT).show();
+            sharedPreferences.edit().putString("locationCode",locationCode).apply();
+
+            changeButtonVisibility();
         }
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // TODO Auto-generated method stub
-        super.onSaveInstanceState(outState);
-        outState.putString("userName", this.userName);
-        outState.putString("locationCode", this.locationCode);
-        outState.putString("comments", commentsTV.getText().toString());
-        //outState.putString("token", commentsTV.getText().toString());
+    protected void onPause() {
 
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if(user!=null){
+            editor.putString("user",user.toJson().toString());
+        }
+        if(locationCode!=null && !"".equals(locationCode)) {
+            editor.putString("locationCode", locationCode);
+        }
+        editor.putString("comments", commentsTV.getText().toString());
+        editor.apply();
+        super.onPause();
     }
+
 
     private void changeButtonVisibility() {
         pb.setVisibility(View.INVISIBLE);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         if (locationCode != null && !"".equals(locationCode)) {
+            launchQrBtn.setVisibility(Button.INVISIBLE);
             submitBtn.setVisibility(Button.VISIBLE);
             commentsTV.setVisibility(TextView.VISIBLE);
-            launchQrBtn.setText(R.string.scnBtnTxt);
-            launchQrBtn.setVisibility(Button.INVISIBLE);
+            submitBtn.setEnabled(true);
         } else {
             submitBtn.setVisibility(Button.INVISIBLE);
             commentsTV.setVisibility(TextView.INVISIBLE);
             launchQrBtn.setVisibility(Button.VISIBLE);
+            launchQrBtn.setText(R.string.scnBtnTxt);
+            launchQrBtn.setEnabled(true);
         }
     }
 
 
-    //Currently not in use - manage security tokens for communicating with Google
-    /*
-	private void getTokenInAsyncTask(String account){
-		AsyncTask<String,Void, Object> task = new AsyncTask<String, Void, Object>() {
 
-			
-			@Override
-			protected Void doInBackground(String... account) {
-				manageToken(account[0]);
-				return null;
-			}
-			
-			
-		}; 
-		task.execute(account);
-	}
-	*/
-    private void checkIn(HandleAsyncResponse handler) {
+    private void checkIn(AsyncResponseHandler handler) {
 		
 		/*
 		submitBtn.setText("sending check-in data...");
@@ -405,11 +371,20 @@ public class CheckInActivity extends Activity implements HandleAsyncResponse {
 
     }
 
+    private void checkIn(){
+        checkIn = generateCheckIn();
+        //saveActivitiesToFile(archivedData);
+
+        FirebaseService fbService = new FirebaseService(this.getApplicationContext(), this);
+        fbService.push("activities", "", checkIn);
+
+    }
+
     private JSONObject collectParams() {
         long currentTS = System.currentTimeMillis() / 1000;
         JSONObject json = new JSONObject();
         try {
-            json.put(Constants.NAME_TXT, this.userName);
+            json.put(Constants.USER_TXT, this.user.getKey());
             json.put(Constants.LOCATION_TXT, locationCode);
             json.put(Constants.COMMENTS_TXT, commentsTV.getText().toString());
             json.put(Constants.TIMESTAMP_TXT, Long.toString(currentTS));
@@ -419,9 +394,62 @@ public class CheckInActivity extends Activity implements HandleAsyncResponse {
         } catch (JSONException e) {
             Log.e("creating checkin json", e.getMessage());
 
+
         }
 
         return json;
+    }
+
+    private CheckIn generateCheckIn(){
+        CheckIn checkIn = new CheckIn();
+        checkIn.setTimestamp(System.currentTimeMillis()/1000);
+        checkIn.setLocationKey(locationCode);
+        checkIn.setUserKey(user.getKey());
+        //checkIn.setLocationKey();
+        checkIn.setLongitude(locController.getLongitude());
+        checkIn.setLatitude(locController.getLatitude());
+        checkIn.setComments(commentsTV.getText().toString());
+
+        return checkIn;
+    }
+
+
+    private JSONArray retrieveActivitiesFromFile(){
+        JSONArray dataArray = new JSONArray();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(getFilesDir() + "/" + Constants.CHECKIN_DATA_FILE));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            br.close();
+
+            JSONObject fileData = new JSONObject(sb.toString());
+            Log.e("check-in process", "file content: " + fileData.toString());
+            dataArray = (JSONArray) fileData.get("check-in");
+
+        } catch (FileNotFoundException fnfe) {
+            Log.e(LOGCAT, "File Exception when trying to read check-in file: "+fnfe.getMessage());
+        }
+        catch(IOException ioe){
+            Log.e(LOGCAT, "IO Exception when trying to read check-in file");
+        }
+        catch(JSONException je){
+            Log.e(LOGCAT,"Failed to retrieve check-in file: "+je.getMessage());
+        }
+            return dataArray;
+    }
+
+    private void saveActivitiesToFile(JSONArray jsonObject){
+        try{
+            FileOutputStream fos = openFileOutput(Constants.CHECKIN_DATA_FILE, Context.MODE_PRIVATE);
+            byte[] jsonContent = jsonObject.toString().getBytes();
+            fos.write(jsonContent);
+            fos.close();
+        } catch (IOException ioe) {
+            Log.e("Saving Check-in data", "IO Exception: " + ioe.getMessage());
+        }
     }
 
     private JSONObject saveParamsToFile(JSONObject data) {
@@ -465,39 +493,8 @@ public class CheckInActivity extends Activity implements HandleAsyncResponse {
             return null;
     }
 
-	 /*private void createCheckingFile(){
-		 output
-	 }*/
 
-    /*
-	protected void manageToken(String account) {
-		String scope="oauth2:https://www.googleapis.com/auth/drive.scripts";
-		
-		Log.e("getting token","checking for account "+account);
-		try{
-			try {
-					token = GoogleAuthUtil.getToken(getApplicationContext(), account, scope);
-					Log.i("Got token",token);
-					return;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				Log.e("oauth process",e.getMessage());
-				return;
-			}
-		}
-		catch(UserRecoverableAuthException e){
-			Intent intent = e.getIntent();
-			this.startActivityForResult(intent,1);
-	         return;			
-		}
-		catch(GoogleAuthException e){
-			Log.e("oauth process", e.getMessage());
-			return;
-		}
-	}
-*/
-
-    private JSONObject getUserRegistration() {
+    private JSONObject getUserFromFile() {
         BufferedReader br = null;
         try {
             String[] files = this.fileList();

@@ -19,5 +19,7 @@
     <string name="action_settings">Settings</string>
     <string name="Settings">Settings</string>
     <string name="submitBtnTxt">Confirm</string>
+    <string name="password">Password</string>
+    <string name="Name">Your Name</string>
 
 </resources>

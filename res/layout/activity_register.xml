@@ -30,26 +30,11 @@
             android:background="@drawable/apptheme_btn_default_disabled_holo_light" >
 
             <EditText
-                android:id="@+id/FirstNameTB"
+                android:id="@+id/NameTB"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/firstName"
-                android:inputType="textPersonName" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/lnameRow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/apptheme_btn_default_disabled_holo_light" >
-
-            <EditText
-                android:id="@+id/LastNameTB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/LastName"
+                android:hint="@string/Name"
                 android:inputType="textPersonName" />
         </RelativeLayout>
 
@@ -66,6 +51,21 @@
                 android:ems="10"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lpasswordRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/apptheme_btn_default_disabled_holo_light" >
+
+            <EditText
+                android:id="@+id/PasswordTB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword" />
         </RelativeLayout>
 
         <RelativeLayout

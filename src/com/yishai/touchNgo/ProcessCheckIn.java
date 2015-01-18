@@ -22,10 +22,10 @@ import java.io.InputStreamReader;
 public class ProcessCheckIn extends AsyncTask<String, Void, JSONObject> {
 	
 		
-		HandleAsyncResponse delegate = null;
+		AsyncResponseHandler delegate = null;
 		JSONObject json = new JSONObject();
 		
-		public void setDelegate(HandleAsyncResponse delegate) {
+		public void setDelegate(AsyncResponseHandler delegate) {
 			this.delegate = delegate;
 		}
 		
